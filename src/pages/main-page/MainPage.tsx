@@ -1,6 +1,6 @@
 import OfferCard from '../../components/offer-card/offer-card';
 
-function MainPage() {
+function MainPage(): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
