@@ -294,7 +294,6 @@ function OfferPage(): JSX.Element {
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
 
             <div className="near-places__list places__list">
-              {/* Карточки соседних предложений — оставил как есть */}
             </div>
           </section>
         </div>
