@@ -1,26 +1,23 @@
-import { useState } from 'react';
 import OfferCard from '../offer-card/offer-card';
 import { Offer } from '../../mocks/offers';
 
 type OfferListProps = {
   offers: Offer[];
+  onOfferHover?: (id: number | null) => void;
 };
 
-function OfferList({ offers }: OfferListProps): JSX.Element {
-  const [activeOfferId, setActiveOfferId] = useState<number | null>(null);
-
+function OfferList({ offers, onOfferHover }: OfferListProps): JSX.Element {
   return (
     <div className="places__list">
       {offers.map((offer) => (
         <OfferCard
           key={offer.id}
           offer={offer}
-          onMouseEnter={setActiveOfferId}
-          onMouseLeave={() => setActiveOfferId(null)}
+          onMouseEnter={(id) => onOfferHover?.(id)}
+          onMouseLeave={() => onOfferHover?.(null)}
         />
       ))}
     </div>
   );
 }
-
 export default OfferList;
