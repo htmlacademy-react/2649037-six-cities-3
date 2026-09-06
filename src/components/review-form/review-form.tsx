@@ -33,7 +33,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
 
       <div className="reviews__rating-form form__rating">
         {[5, 4, 3, 2, 1].map((star) => (
-          <span key={star}>
+          <>
             <input
               className="form__rating-input visually-hidden"
               name="rating"
@@ -52,7 +52,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
                 <use xlinkHref="#icon-star"></use>
               </svg>
             </label>
-          </span>
+          </>
         ))}
       </div>
 
