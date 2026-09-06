@@ -1,36 +1,41 @@
-import { useEffect, useRef } from 'react';
-import L from 'leaflet';
-import { Offer } from '../../mocks/offers';
+import {useEffect, useRef} from 'react';
+import {layerGroup, Marker} from 'leaflet';
+import useMap from '../../hooks/use-map';
+import {Offer} from '../../mocks/offers';
+import 'leaflet/dist/leaflet.css';
 
 type MapProps = {
   offers: Offer[];
 };
 
-function Map({ offers }: MapProps): JSX.Element {
+function Map({offers}: MapProps): JSX.Element {
   const mapRef = useRef<HTMLDivElement | null>(null);
 
+  // центр Амстердама
+  const map = useMap(mapRef, [52.374, 4.889]);
+
   useEffect(() => {
-    if (!mapRef.current) {
+    if (!map) {
       return;
     }
 
-    const map = L.map(mapRef.current).setView([52.374, 4.889], 12);
+    const markerLayer = layerGroup().addTo(map);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
-
-    // отображаем все предложения в виде маркеров
     offers.forEach((offer) => {
-      L.marker([offer.location.latitude, offer.location.longitude]).addTo(map);
+      const marker = new Marker({
+        lat: offer.location.latitude,
+        lng: offer.location.longitude
+      });
+
+      marker.addTo(markerLayer);
     });
 
     return () => {
-      map.remove();
+      map.removeLayer(markerLayer);
     };
-  }, [offers]);
+  }, [map, offers]);
 
-  return <div ref={mapRef} className="map" />;
+  return <div ref={mapRef} style={{height: '500px'}} />;
 }
 
 export default Map;
