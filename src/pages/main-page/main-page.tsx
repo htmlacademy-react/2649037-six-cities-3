@@ -1,5 +1,7 @@
 import OfferList from '../../components/offer-list/offer-list.tsx';
 import { Offer } from '../../mocks/offers.ts';
+import Map from '../../components/map/map';
+
 type MainPageProps = {
   offers: Offer[];
 };
@@ -120,7 +122,9 @@ function MainPage({ offers }: MainPageProps): JSX.Element {
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <section className="cities__map map">
+                <Map offers={offers} />
+              </section>
             </div>
           </div>
         </div>
