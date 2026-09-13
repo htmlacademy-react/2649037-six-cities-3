@@ -1,34 +1,18 @@
-// src/store/reducer.ts
-import { createReducer } from '@reduxjs/toolkit';
-import { changeCity, loadOffers } from './action';
-import { Offer } from '../mocks/offers';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './components/app/app.tsx';
 
+import { Provider } from 'react-redux';
+import { store } from './store';
 
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
 
-export type CityName =
-  | 'Paris'
-  | 'Cologne'
-  | 'Brussels'
-  | 'Amsterdam'
-  | 'Hamburg'
-  | 'Dusseldorf';
-
-export type State = {
-  city: CityName;
-  offers: Offer[];
-};
-
-export const initialState: State = {
-  city: 'Paris',// по ТЗ — город по умолчанию
-  offers: [],
-};
-
-export const reducer = createReducer(initialState, (builder) => {
-  builder
-    .addCase(changeCity, (state, action) => {
-      state.city = action.payload;
-    })
-    .addCase(loadOffers, (state, action) => {
-      state.offers = action.payload;
-    });
-});
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>
+);

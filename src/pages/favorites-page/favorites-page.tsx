@@ -1,11 +1,11 @@
+import { useSelector } from 'react-redux';
+import { selectOffers } from '../../store/selectors';
 import OfferCard from '../../components/offer-card/offer-card';
-import { Offer } from '../../mocks/offers';
 
-type FavoritesPageProps = {
-  offers: Offer[];
-};
+function FavoritesPage(): JSX.Element {
+  const offers = useSelector(selectOffers);
+  const favoriteOffers = offers.filter((offer) => offer.isFavorite);
 
-function FavoritesPage({ offers }: FavoritesPageProps): JSX.Element {
   return(
     <div className="page">
       <header className="header">
@@ -22,7 +22,7 @@ function FavoritesPage({ offers }: FavoritesPageProps): JSX.Element {
                   <a className="header__nav-link header__nav-link--profile" href="#">
                     <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                     <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
+                    <span className="header__favorite-count">{favoriteOffers.length}</span>
                   </a>
                 </li>
                 <li className="header__nav-item">
@@ -41,23 +41,27 @@ function FavoritesPage({ offers }: FavoritesPageProps): JSX.Element {
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
 
-            <ul className="favorites__list">
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <a className="locations__item-link" href="#">
-                      <span>Amsterdam</span>
-                    </a>
+            {favoriteOffers.length === 0 ? (
+              <p>Nothing yet saved</p>
+            ) : (
+              <ul className="favorites__list">
+                <li className="favorites__locations-items">
+                  <div className="favorites__locations locations locations--current">
+                    <div className="locations__item">
+                      <a className="locations__item-link" href="#">
+                        <span>Amsterdam</span>
+                      </a>
+                    </div>
                   </div>
-                </div>
 
-                <div className="favorites__places">
-                  {offers.map((offer) => (
-                    <OfferCard key={offer.id} offer={offer} />
-                  ))}
-                </div>
-              </li>
-            </ul>
+                  <div className="favorites__places">
+                    {favoriteOffers.map((offer) => (
+                      <OfferCard key={offer.id} offer={offer} />
+                    ))}
+                  </div>
+                </li>
+              </ul>
+            )}
 
           </section>
         </div>

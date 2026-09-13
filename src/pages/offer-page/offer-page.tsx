@@ -1,16 +1,20 @@
 import { useParams } from 'react-router-dom';
-import { Offer } from '../../mocks/offers';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+
 import NotFoundPage from '../not-found-page/not-found-page';
 import OfferCard from '../../components/offer-card/offer-card';
 import ReviewForm from '../../components/review-form/review-form';
 
-type OfferPageProps = {
-  offers: Offer[];
-};
+import { selectOffers, selectOfferById } from '../../store/selectors';
 
-function OfferPage({ offers }: OfferPageProps): JSX.Element {
+function OfferPage(): JSX.Element {
   const { id } = useParams();
-  const offer = offers.find((o) => o.id === Number(id));
+  const offerId = Number(id);
+
+  const offers = useSelector(selectOffers);
+  const offer = useSelector((state: RootState) =>
+    selectOfferById(state, offerId));
 
   if (!offer) {
     return <NotFoundPage />;
@@ -76,14 +80,12 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
 
           <div className="offer__container container">
             <div className="offer__wrapper">
-              {/* PREMIUM BADGE */}
               {offer.isPremium && (
                 <div className="offer__mark">
                   <span>Premium</span>
                 </div>
               )}
 
-              {/* TITLE + BOOKMARK */}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{offer.title}</h1>
 
@@ -100,7 +102,6 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
                 </button>
               </div>
 
-              {/* RATING */}
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
                   <span style={{ width: `${offer.rating * 20}%` }}></span>
@@ -111,7 +112,6 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
                 </span>
               </div>
 
-              {/* FEATURES */}
               <ul className="offer__features">
                 <li className="offer__feature offer__feature--entire">
                   {offer.type}
@@ -124,13 +124,11 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
                 </li>
               </ul>
 
-              {/* PRICE */}
               <div className="offer__price">
                 <b className="offer__price-value">€{offer.price}</b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
 
-              {/* INSIDE GOODS */}
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
@@ -142,7 +140,6 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
                 </ul>
               </div>
 
-              {/* HOST */}
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
 
@@ -172,7 +169,6 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
                 </div>
               </div>
 
-              {/* REVIEWS — оставляем статичными, пока нет API */}
               <section className="offer__reviews reviews">
                 <h2 className="reviews__title">
                   Reviews · <span className="reviews__amount">1</span>
@@ -211,23 +207,19 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
                     </div>
                   </li>
                 </ul>
-                <ReviewForm
-                  onSubmit={() => {}}
-                  /* заглушка пока нет данных */
-                />
+
+                <ReviewForm onSubmit={() => {}} />
               </section>
             </div>
           </div>
 
-          {/* MAP — пока статичная */}
           <section className="offer__map map"></section>
         </section>
 
-        {/* NEAR PLACES */}
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">
-              Other places in the neighbourhood
+              Other places in the neighborhood
             </h2>
 
             <div className="near-places__list places__list">
