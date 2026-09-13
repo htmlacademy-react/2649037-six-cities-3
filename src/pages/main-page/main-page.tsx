@@ -30,9 +30,6 @@ function MainPage(): JSX.Element {
 
   const activeCity = useAppSelector(selectCity);
   const cityOffers = useAppSelector(selectOffersByCity);
-  console.log('activeCity:', activeCity);
-  console.log('offers:', cityOffers);
-
 
   return (
     <div className="page page--gray page--main">

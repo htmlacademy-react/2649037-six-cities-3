@@ -15,3 +15,6 @@ export enum AuthorizationStatus {
   }
 
 export const DEFAULT_CITY = 'Amsterdam';
+
+export const DEFAULT_MAP_LOCATION: [number, number] = [52.374, 4.889];
+
