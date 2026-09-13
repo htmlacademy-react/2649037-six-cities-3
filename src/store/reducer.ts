@@ -16,25 +16,27 @@ export type State = {
 
 export const initialState: State = {
   city: DEFAULT_CITY,
-  offers: [],// пока пусто, заполним тестовыми данными через action
+  offers: [],
 };
 
 export type Action =
-  | { type: 'changeCity'; payload: CityName }
-  | { type: 'loadOffers'; payload: Offer[] };
+  | { type: 'app/changeCity'; payload: CityName }
+  | { type: 'app/loadOffers'; payload: Offer[] };
 
 export const reducer = (state: State = initialState, action: Action): State => {
   switch (action.type) {
-    case 'changeCity':
+    case 'app/changeCity':
       return {
         ...state,
         city: action.payload,
       };
-    case 'loadOffers':
+
+    case 'app/loadOffers':
       return {
         ...state,
         offers: action.payload,
       };
+
     default:
       return state;
   }

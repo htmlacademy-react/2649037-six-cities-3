@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+//import { useDispatch, useSelector } from 'react-redux';
+import { useAppSelector } from '../../hooks/use-app-selector';
+import { useAppDispatch } from '../../hooks/use-app-dispatch';
 
 import OfferList from '../../components/offer-list/offer-list.tsx';
 import Map from '../../components/map/map';
@@ -20,14 +22,17 @@ const CITIES: CityName[] = [
 ];
 
 function MainPage(): JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(loadOffers(offers));
   }, [dispatch]);
 
-  const activeCity = useSelector(selectCity);
-  const cityOffers = useSelector(selectOffersByCity);
+  const activeCity = useAppSelector(selectCity);
+  const cityOffers = useAppSelector(selectOffersByCity);
+  console.log('activeCity:', activeCity);
+  console.log('offers:', cityOffers);
+
 
   return (
     <div className="page page--gray page--main">
