@@ -1,18 +1,23 @@
-import {useEffect, useRef} from 'react';
-import {layerGroup, Marker} from 'leaflet';
+import { useEffect, useRef } from 'react';
+import { layerGroup, Marker } from 'leaflet';
+import { DEFAULT_MAP_LOCATION } from '../../const';
 import useMap from '../../hooks/use-map';
-import {Offer} from '../../mocks/offers';
+import { Offer } from '../../mocks/offers';
 import 'leaflet/dist/leaflet.css';
 
 type MapProps = {
   offers: Offer[];
 };
 
-function Map({offers}: MapProps): JSX.Element {
+function Map({ offers }: MapProps): JSX.Element {
   const mapRef = useRef<HTMLDivElement | null>(null);
-
-  // центр Амстердама
-  const map = useMap(mapRef, [52.374, 4.889]);
+  const cityLocation = offers[0]?.city.location;
+  const map = useMap(
+    mapRef,
+    cityLocation
+      ? [cityLocation.latitude, cityLocation.longitude]
+      : DEFAULT_MAP_LOCATION
+  );
 
   useEffect(() => {
     if (!map) {
@@ -24,7 +29,7 @@ function Map({offers}: MapProps): JSX.Element {
     offers.forEach((offer) => {
       const marker = new Marker({
         lat: offer.location.latitude,
-        lng: offer.location.longitude
+        lng: offer.location.longitude,
       });
 
       marker.addTo(markerLayer);
@@ -35,7 +40,7 @@ function Map({offers}: MapProps): JSX.Element {
     };
   }, [map, offers]);
 
-  return <div ref={mapRef} style={{height: '500px'}} />;
+  return <div ref={mapRef} style={{ height: '100%' }} />;
 }
 
 export default Map;

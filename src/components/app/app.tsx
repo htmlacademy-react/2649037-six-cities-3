@@ -8,14 +8,9 @@ import MainPage from '../../pages/main-page/main-page';
 
 import PrivateRoute from '../../components/private-router/private-router';
 import { AppRoute, AuthorizationStatus } from '../../const';
-import { Offer } from '../../mocks/offers';
 
-type AppProps = {
-  offers: Offer[];
-};
-
-function App({ offers }: AppProps): JSX.Element {
-  const authorizationStatus = AuthorizationStatus.NoAuth; // пока всегда не авторизован
+function App(): JSX.Element {
+  const authorizationStatus = AuthorizationStatus.NoAuth;
 
   return (
     <BrowserRouter>
@@ -23,7 +18,7 @@ function App({ offers }: AppProps): JSX.Element {
 
         <Route
           path={AppRoute.Root}
-          element={<MainPage offers={offers} />}
+          element={<MainPage />}
         />
 
         <Route
@@ -35,14 +30,14 @@ function App({ offers }: AppProps): JSX.Element {
           path={AppRoute.Favorites}
           element={
             <PrivateRoute authorizationStatus={authorizationStatus}>
-              <FavoritesPage offers={offers.filter((offer) => offer.isFavorite)}/>
+              <FavoritesPage />
             </PrivateRoute>
           }
         />
 
         <Route
           path={AppRoute.Offer}
-          element={<OfferPage offers={offers} />}
+          element={<OfferPage />}
         />
 
         <Route
