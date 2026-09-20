@@ -1,26 +1,24 @@
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-
+import { Offer } from '../../types/offer';
 import NotFoundPage from '../not-found-page/not-found-page';
 import OfferCard from '../../components/offer-card/offer-card';
 import ReviewForm from '../../components/review-form/review-form';
 
-import { selectOffers, selectOfferById } from '../../store/selectors';
+import { selectOfferById } from '../../store/selectors';
 
 function OfferPage(): JSX.Element {
   const { id } = useParams();
-  const offerId = Number(id);
 
-  const offers = useSelector(selectOffers);
   const offer = useSelector((state: RootState) =>
-    selectOfferById(state, offerId));
+    selectOfferById(state, id!));
 
   if (!offer) {
     return <NotFoundPage />;
   }
 
-  const nearPlaces = offers.filter((o) => offer.nearPlaces.includes(o.id));
+  const nearPlaces: Offer[] = []; // что с этим делать не знаю
 
   return (
     <div className="page">
