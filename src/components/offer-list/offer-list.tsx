@@ -1,9 +1,9 @@
 import OfferCard from '../offer-card/offer-card';
-import { Offer } from '../../mocks/offers';
+import { Offer } from '../../types/offer';
 
 type OfferListProps = {
   offers: Offer[];
-  onOfferHover?: (id: number | null) => void;
+  onOfferHover?: (id: string | null) => void;
 };
 
 function OfferList({ offers, onOfferHover }: OfferListProps): JSX.Element {
@@ -13,7 +13,7 @@ function OfferList({ offers, onOfferHover }: OfferListProps): JSX.Element {
         <OfferCard
           key={offer.id}
           offer={offer}
-          onMouseEnter={(id) => onOfferHover?.(id)}
+          onMouseEnter={() => onOfferHover?.(offer.id)}
           onMouseLeave={() => onOfferHover?.(null)}
         />
       ))}
