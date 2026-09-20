@@ -15,3 +15,14 @@ export const fetchOffers = createAsyncThunk<
     return data;
   }
 );
+export const fetchOfferById = createAsyncThunk<
+  Offer,
+  string,
+  { extra: AxiosInstance }
+>(
+  'data/fetchOfferById',
+  async (id, { extra: api }) => {
+    const { data } = await api.get<Offer>(`/offers/${id}`);
+    return data;
+  }
+);
