@@ -1,5 +1,5 @@
-import { Offer } from '../mocks/offers';
 import { DEFAULT_CITY } from '../const';
+import { Offer } from '../types/offer';
 
 export type CityName =
   | 'Paris'

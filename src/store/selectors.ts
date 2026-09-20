@@ -1,11 +1,10 @@
 import { RootState } from './index';
-import { Offer } from '../mocks/offers';
 
 export const selectCity = (state: RootState) => state.city;
 
 export const selectOffers = (state: RootState) => state.offers;
 
-export const selectOfferById = (state: RootState, id: number): Offer | undefined =>
+export const selectOfferById = (state: RootState, id: string) =>
   state.offers.find((offer) => offer.id === id);
 
 export const selectOffersByCity = (state: RootState) =>
