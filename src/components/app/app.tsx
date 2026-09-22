@@ -8,10 +8,18 @@ import MainPage from '../../pages/main-page/main-page';
 
 import PrivateRoute from '../../components/private-router/private-router';
 import { AppRoute, AuthorizationStatus } from '../../const';
+import { useEffect } from 'react';
+import { useAppDispatch } from '../../hooks/use-app-dispatch';
+import { fetchOffers } from '../../store/api-actions';
+
 
 function App(): JSX.Element {
   const authorizationStatus = AuthorizationStatus.NoAuth;
+  const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    dispatch(fetchOffers());
+  }, [dispatch]);
   return (
     <BrowserRouter>
       <Routes>

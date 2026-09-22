@@ -1,12 +1,13 @@
 import { RootState } from './index';
-import { Offer } from '../mocks/offers';
-
+import { createSelector } from 'reselect';
 export const selectCity = (state: RootState) => state.city;
 
 export const selectOffers = (state: RootState) => state.offers;
 
-export const selectOfferById = (state: RootState, id: number): Offer | undefined =>
+export const selectOfferById = (state: RootState, id: string) =>
   state.offers.find((offer) => offer.id === id);
 
-export const selectOffersByCity = (state: RootState) =>
-  state.offers.filter((offer) => offer.city.name === state.city);
+export const selectOffersByCity = createSelector(
+  [(state: RootState) => state.offers, (state: RootState) => state.city],
+  (offers, city) => offers.filter((offer) => offer.city.name === city)
+);

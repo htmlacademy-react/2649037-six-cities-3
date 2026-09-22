@@ -1,27 +1,31 @@
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { fetchOfferById } from '../../store/api-actions';
+import { useEffect } from 'react';
+import { Offer } from '../../types/offer';
+import { useAppDispatch } from '../../hooks/use-app-dispatch';
+import { useAppSelector } from '../../hooks/use-app-selector';
 
 import NotFoundPage from '../not-found-page/not-found-page';
 import OfferCard from '../../components/offer-card/offer-card';
 import ReviewForm from '../../components/review-form/review-form';
 
-import { selectOffers, selectOfferById } from '../../store/selectors';
-
 function OfferPage(): JSX.Element {
+  const dispatch = useAppDispatch();
   const { id } = useParams();
-  const offerId = Number(id);
 
-  const offers = useSelector(selectOffers);
-  const offer = useSelector((state: RootState) =>
-    selectOfferById(state, offerId));
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchOfferById(id));
+    }
+  }, [id, dispatch]);
+
+  const offer = useAppSelector((state) => state.currentOffer);
 
   if (!offer) {
     return <NotFoundPage />;
   }
 
-  const nearPlaces = offers.filter((o) => offer.nearPlaces.includes(o.id));
-
+  const nearPlaces: Offer[] = []; // пока оставляем пустым
   return (
     <div className="page">
       <header className="header">
@@ -69,13 +73,15 @@ function OfferPage(): JSX.Element {
         <section className="offer">
           {/* GALLERY */}
           <div className="offer__gallery-container container">
-            <div className="offer__gallery">
-              {offer.images.map((img) => (
+            {offer.images?.length ? (
+              offer.images.map((img) => (
                 <div key={img} className="offer__image-wrapper">
                   <img className="offer__image" src={img} alt={offer.title} />
                 </div>
-              ))}
-            </div>
+              ))
+            ) : (
+              <p className="offer__no-images">Нет изображений</p>
+            )}
           </div>
 
           <div className="offer__container container">
@@ -132,11 +138,17 @@ function OfferPage(): JSX.Element {
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
-                  {offer.goods.map((item) => (
-                    <li key={item} className="offer__inside-item">
-                      {item}
+                  {offer.goods?.length ? (
+                    offer.goods.map((item) => (
+                      <li key={item} className="offer__inside-item">
+                        {item}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="offer__inside-item">
+                      Нет данных о удобствах
                     </li>
-                  ))}
+                  )}
                 </ul>
               </div>
 
@@ -146,20 +158,20 @@ function OfferPage(): JSX.Element {
                 <div className="offer__host-user user">
                   <div
                     className={`offer__avatar-wrapper user__avatar-wrapper ${
-                      offer.host.isPro ? 'offer__avatar-wrapper--pro' : ''
+                      offer.host?.isPro ? 'offer__avatar-wrapper--pro' : ''
                     }`}
                   >
                     <img
                       className="offer__avatar user__avatar"
-                      src={offer.host.avatarUrl}
+                      src={offer.host?.avatarUrl}
                       width="74"
                       height="74"
                       alt="Host avatar"
                     />
                   </div>
 
-                  <span className="offer__user-name">{offer.host.name}</span>
-                  {offer.host.isPro && (
+                  <span className="offer__user-name">{offer.host?.name}</span>
+                  {offer.host?.isPro && (
                     <span className="offer__user-status">Pro</span>
                   )}
                 </div>

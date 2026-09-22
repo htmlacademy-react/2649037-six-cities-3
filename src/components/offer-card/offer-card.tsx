@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { Offer } from '../../mocks/offers';
+import { Offer } from '../../types/offer';
 import { AppRoute } from '../../const';
 
 type OfferCardProps = {
   offer: Offer;
-  onMouseEnter?: (id: number) => void;
+  onMouseEnter?: (id: string) => void;
   onMouseLeave?: () => void;
 };
 
@@ -22,7 +22,7 @@ function OfferCard({ offer, onMouseEnter, onMouseLeave }: OfferCardProps): JSX.E
       )}
 
       <div className="place-card__image-wrapper">
-        <Link to={AppRoute.Offer.replace(':id', String(offer.id))}>
+        <Link to={AppRoute.Offer.replace(':id', offer.id)}>
           <img
             className="place-card__image"
             src={offer.previewImage}
@@ -61,7 +61,7 @@ function OfferCard({ offer, onMouseEnter, onMouseLeave }: OfferCardProps): JSX.E
         </div>
 
         <h2 className="place-card__name">
-          <Link to={AppRoute.Offer.replace(':id', String(offer.id))}>
+          <Link to={AppRoute.Offer.replace(':id', offer.id)}>
             {offer.title}
           </Link>
         </h2>

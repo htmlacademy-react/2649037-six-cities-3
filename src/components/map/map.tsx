@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { layerGroup, Marker } from 'leaflet';
 import { DEFAULT_MAP_LOCATION } from '../../const';
 import useMap from '../../hooks/use-map';
-import { Offer } from '../../mocks/offers';
+import { Offer } from '../../types/offer';
 import 'leaflet/dist/leaflet.css';
 
 type MapProps = {
@@ -11,7 +11,10 @@ type MapProps = {
 
 function Map({ offers }: MapProps): JSX.Element {
   const mapRef = useRef<HTMLDivElement | null>(null);
+
+  // координаты города
   const cityLocation = offers[0]?.city.location;
+
   const map = useMap(
     mapRef,
     cityLocation
@@ -19,6 +22,17 @@ function Map({ offers }: MapProps): JSX.Element {
       : DEFAULT_MAP_LOCATION
   );
 
+  // ДВИГАЕМ КАРТУ ПРИ СМЕНЕ ГОРОДА
+  useEffect(() => {
+    if (map && cityLocation) {
+      map.setView(
+        [cityLocation.latitude, cityLocation.longitude],
+        cityLocation.zoom
+      );
+    }
+  }, [map, cityLocation]);
+
+  // Обновляем маркеры
   useEffect(() => {
     if (!map) {
       return;
