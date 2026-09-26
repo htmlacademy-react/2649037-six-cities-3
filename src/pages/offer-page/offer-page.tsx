@@ -1,15 +1,15 @@
 import { useParams } from 'react-router-dom';
-import { fetchOfferById } from '../../store/api-actions';
+import { fetchOfferById, fetchNearbyOffers } from '../../store/api-actions';
 import { useEffect } from 'react';
-import { Offer } from '../../types/offer';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
-import { selectCurrentOffer } from '../../store/selectors';
+import { selectCurrentOffer, selectNearbyOffers } from '../../store/selectors';
 
 import NotFoundPage from '../not-found-page/not-found-page';
-import OfferCard from '../../components/offer-card/offer-card';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewsList from '../../components/review/reviews-list';
+import Map from '../../components/map/map';
+import OfferList from '../../components/offer-list/offer-list';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -18,16 +18,17 @@ function OfferPage(): JSX.Element {
   useEffect(() => {
     if (id) {
       dispatch(fetchOfferById(id));
+      dispatch(fetchNearbyOffers(id));
     }
   }, [id, dispatch]);
 
   const offer = useAppSelector(selectCurrentOffer);
+  const nearPlaces = useAppSelector(selectNearbyOffers);
 
   if (!offer) {
     return <NotFoundPage />;
   }
 
-  const nearPlaces: Offer[] = []; // пока оставляем пустым
   return (
     <div className="page">
       <header className="header">
@@ -190,7 +191,9 @@ function OfferPage(): JSX.Element {
             </div>
           </div>
 
-          <section className="offer__map map"></section>
+          <section className="offer__map map">
+            <Map offers={nearPlaces} />
+          </section>
         </section>
 
         <div className="container">
@@ -200,9 +203,7 @@ function OfferPage(): JSX.Element {
             </h2>
 
             <div className="near-places__list places__list">
-              {nearPlaces.map((place) => (
-                <OfferCard key={place.id} offer={place} />
-              ))}
+              <OfferList offers={nearPlaces} />
             </div>
           </section>
         </div>

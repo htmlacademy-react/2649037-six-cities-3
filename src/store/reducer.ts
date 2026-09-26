@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { DEFAULT_CITY } from '../const';
 import { Offer } from '../types/offer';
 import { changeCity } from './action';
-import { fetchOfferById, fetchOffers } from './api-actions';
+import { fetchOfferById, fetchOffers, fetchNearbyOffers } from './api-actions';
 
 export type CityName =
   | 'Paris'
@@ -17,6 +17,7 @@ export type State = {
   offers: Offer[];
   isOffersLoading: boolean;
   currentOffer: Offer | null;
+  nearbyOffers: Offer[];
 };
 
 export const initialState: State = {
@@ -24,6 +25,7 @@ export const initialState: State = {
   offers: [],
   isOffersLoading: false,
   currentOffer: null,
+  nearbyOffers: [],
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -43,5 +45,8 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(fetchOfferById.fulfilled, (state, action) => {
       state.currentOffer = action.payload;
+    })
+    .addCase(fetchNearbyOffers.fulfilled, (state, action) => {
+      state.nearbyOffers = action.payload;
     });
 });

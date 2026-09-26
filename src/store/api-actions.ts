@@ -6,6 +6,15 @@ type Extra = {
   extra: AxiosInstance;
 };
 
+export const fetchNearbyOffers = createAsyncThunk<Offer[], string, Extra>(
+  'data/fetchNearbyOffers',
+  async (id, { extra: api }) => {
+    const { data } = await api.get<Offer[]>(`/offers/${id}/nearby`);
+
+    return data;
+  }
+);
+
 export const fetchOffers = createAsyncThunk<
   Offer[],
   undefined,
@@ -27,3 +36,4 @@ export const fetchOfferById = createAsyncThunk<Offer, string, Extra>(
     return data;
   }
 );
+
