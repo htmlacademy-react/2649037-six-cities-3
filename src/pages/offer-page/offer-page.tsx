@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Offer } from '../../types/offer';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
+import { selectCurrentOffer } from '../../store/selectors';
 
 import NotFoundPage from '../not-found-page/not-found-page';
 import OfferCard from '../../components/offer-card/offer-card';
@@ -19,7 +20,7 @@ function OfferPage(): JSX.Element {
     }
   }, [id, dispatch]);
 
-  const offer = useAppSelector((state) => state.currentOffer);
+  const offer = useAppSelector(selectCurrentOffer);
 
   if (!offer) {
     return <NotFoundPage />;

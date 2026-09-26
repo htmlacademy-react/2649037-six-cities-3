@@ -11,3 +11,6 @@ export const selectOffersByCity = createSelector(
   [(state: RootState) => state.offers, (state: RootState) => state.city],
   (offers, city) => offers.filter((offer) => offer.city.name === city)
 );
+export const selectIsOffersLoading = (state: RootState) => state.isOffersLoading;
+
+export const selectCurrentOffer = (state: RootState) => state.currentOffer;
