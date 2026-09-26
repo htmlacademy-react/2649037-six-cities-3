@@ -2,7 +2,7 @@ import { useAppSelector } from '../../hooks/use-app-selector';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { Spinner } from '../../components/spinner/spinner';
 import { changeCity } from '../../store/action';
-import { selectCity, selectOffersByCity, selectOffers } from '../../store/selectors';
+import { selectCity, selectOffersByCity, selectIsOffersLoading } from '../../store/selectors';
 import { CityName } from '../../store/reducer';
 import { CitiesList } from '../../components/cities-list/cities-list';
 import OfferList from '../../components/offer-list/offer-list';
@@ -19,13 +19,12 @@ const CITIES: CityName[] = [
 
 function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
-
-  const offers = useAppSelector(selectOffers);
   const activeCity = useAppSelector(selectCity);
   const cityOffers = useAppSelector(selectOffersByCity);
+  const isOffersLoading = useAppSelector(selectIsOffersLoading);
 
-  // Спиннер пока нет данных
-  if (offers.length === 0) {
+  // Спиннер пока идет загрузка
+  if (isOffersLoading) {
     return <Spinner />;
   }
 

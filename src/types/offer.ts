@@ -1,8 +1,25 @@
+export type User = {
+  name: string;
+  avatarUrl: string;
+  isPro: boolean;
+  email?: string;
+  token?: string;
+};
+
+export type Review = {
+  id: string;
+  date: string;
+  user: User;
+  comment: string;
+  rating: number;
+};
+
 export type Offer = {
   id: string; // UUID
   title: string;
   type: string;
   price: number;
+
 
   city: {
     name: string;
@@ -28,11 +45,7 @@ export type Offer = {
 
   goods: string[];
 
-  host: {
-    name: string;
-    avatarUrl: string;
-    isPro: boolean;
-  };
+  host: User;
 
   description: string;
   bedrooms: number;

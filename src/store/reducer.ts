@@ -1,5 +1,8 @@
+import { createReducer } from '@reduxjs/toolkit';
 import { DEFAULT_CITY } from '../const';
 import { Offer } from '../types/offer';
+import { changeCity } from './action';
+import { fetchOfferById, fetchOffers, fetchNearbyOffers } from './api-actions';
 
 export type CityName =
   | 'Paris'
@@ -14,6 +17,7 @@ export type State = {
   offers: Offer[];
   isOffersLoading: boolean;
   currentOffer: Offer | null;
+  nearbyOffers: Offer[];
 };
 
 export const initialState: State = {
@@ -21,28 +25,28 @@ export const initialState: State = {
   offers: [],
   isOffersLoading: false,
   currentOffer: null,
+  nearbyOffers: [],
 };
-export type Action =
-  | { type: 'app/changeCity'; payload: CityName }
-  | { type: 'app/loadOffers'; payload: Offer[] }
-  | { type: 'app/setOffersLoading'; payload: boolean }
-  | { type: 'data/fetchOfferById/fulfilled'; payload: Offer };
 
-export const reducer = (state: State = initialState, action: Action): State => {
-  switch (action.type) {
-    case 'app/changeCity':
-      return { ...state, city: action.payload };
-
-    case 'app/loadOffers':
-      return { ...state, offers: action.payload, isOffersLoading: false };
-
-    case 'app/setOffersLoading':
-      return { ...state, isOffersLoading: action.payload };
-
-    case 'data/fetchOfferById/fulfilled':
-      return { ...state, currentOffer: action.payload };
-
-    default:
-      return state;
-  }
-};
+export const reducer = createReducer(initialState, (builder) => {
+  builder
+    .addCase(changeCity, (state, action) => {
+      state.city = action.payload;
+    })
+    .addCase(fetchOffers.pending, (state) => {
+      state.isOffersLoading = true;
+    })
+    .addCase(fetchOffers.fulfilled, (state, action) => {
+      state.offers = action.payload;
+      state.isOffersLoading = false;
+    })
+    .addCase(fetchOffers.rejected, (state) => {
+      state.isOffersLoading = false;
+    })
+    .addCase(fetchOfferById.fulfilled, (state, action) => {
+      state.currentOffer = action.payload;
+    })
+    .addCase(fetchNearbyOffers.fulfilled, (state, action) => {
+      state.nearbyOffers = action.payload;
+    });
+});
