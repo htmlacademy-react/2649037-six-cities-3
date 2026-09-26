@@ -9,6 +9,7 @@ import { selectCurrentOffer } from '../../store/selectors';
 import NotFoundPage from '../not-found-page/not-found-page';
 import OfferCard from '../../components/offer-card/offer-card';
 import ReviewForm from '../../components/review-form/review-form';
+import ReviewsList from '../../components/review/reviews-list';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -183,44 +184,7 @@ function OfferPage(): JSX.Element {
               </div>
 
               <section className="offer__reviews reviews">
-                <h2 className="reviews__title">
-                  Reviews · <span className="reviews__amount">1</span>
-                </h2>
-
-                <ul className="reviews__list">
-                  <li className="reviews__item">
-                    <div className="reviews__user user">
-                      <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                        <img
-                          className="reviews__avatar user__avatar"
-                          src="img/avatar-max.jpg"
-                          width="54"
-                          height="54"
-                          alt="Reviews avatar"
-                        />
-                      </div>
-                      <span className="reviews__user-name">Max</span>
-                    </div>
-
-                    <div className="reviews__info">
-                      <div className="reviews__rating rating">
-                        <div className="reviews__stars rating__stars">
-                          <span style={{ width: '80%' }}></span>
-                          <span className="visually-hidden">Rating</span>
-                        </div>
-                      </div>
-
-                      <p className="reviews__text">
-                        A quiet cozy and picturesque place near the river.
-                      </p>
-
-                      <time className="reviews__time" dateTime="2019-04-24">
-                        April 2019
-                      </time>
-                    </div>
-                  </li>
-                </ul>
-
+                <ReviewsList reviews={[]} />
                 <ReviewForm onSubmit={() => {}} />
               </section>
             </div>
