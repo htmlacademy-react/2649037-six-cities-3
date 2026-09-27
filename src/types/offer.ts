@@ -51,3 +51,4 @@ export type Offer = {
   bedrooms: number;
   maxAdults: number;
 };
+

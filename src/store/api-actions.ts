@@ -1,10 +1,19 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Offer } from '../types/offer';
+import { Offer, Review } from '../types/offer';
 import { AxiosInstance } from 'axios';
 
 type Extra = {
   extra: AxiosInstance;
 };
+
+export const fetchReviews = createAsyncThunk<Review[], string, Extra>(
+  'data/fetchReviews',
+  async (id, { extra: api }) => {
+    const { data } = await api.get<Review[]>(`/comments/${id}`);
+
+    return data;
+  }
+);
 
 export const fetchNearbyOffers = createAsyncThunk<Offer[], string, Extra>(
   'data/fetchNearbyOffers',

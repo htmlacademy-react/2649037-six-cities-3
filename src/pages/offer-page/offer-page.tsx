@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
-import { fetchOfferById, fetchNearbyOffers } from '../../store/api-actions';
+import { fetchOfferById, fetchNearbyOffers, fetchReviews } from '../../store/api-actions';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
-import { selectCurrentOffer, selectNearbyOffers } from '../../store/selectors';
+import { selectCurrentOffer, selectNearbyOffers, selectReviews } from '../../store/selectors';
 
 import NotFoundPage from '../not-found-page/not-found-page';
 import ReviewForm from '../../components/review-form/review-form';
@@ -19,11 +19,13 @@ function OfferPage(): JSX.Element {
     if (id) {
       dispatch(fetchOfferById(id));
       dispatch(fetchNearbyOffers(id));
+      dispatch(fetchReviews(id));
     }
   }, [id, dispatch]);
 
   const offer = useAppSelector(selectCurrentOffer);
   const nearPlaces = useAppSelector(selectNearbyOffers);
+  const reviews = useAppSelector(selectReviews);
 
   if (!offer) {
     return <NotFoundPage />;
@@ -185,7 +187,7 @@ function OfferPage(): JSX.Element {
               </div>
 
               <section className="offer__reviews reviews">
-                <ReviewsList reviews={[]} />
+                <ReviewsList reviews={reviews} />
                 <ReviewForm onSubmit={() => {}} />
               </section>
             </div>

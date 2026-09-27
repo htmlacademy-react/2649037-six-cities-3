@@ -17,4 +17,4 @@ export const selectIsOffersLoading = (state: RootState) => state.isOffersLoading
 export const selectCurrentOffer = (state: RootState) => state.currentOffer;
 
 export const selectNearbyOffers = (state: RootState): Offer[] => state.nearbyOffers;
-
+export const selectReviews = (state: RootState) => state.reviews;

@@ -1,8 +1,8 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer, PayloadAction } from '@reduxjs/toolkit';
 import { DEFAULT_CITY } from '../const';
-import { Offer } from '../types/offer';
+import { Offer, Review } from '../types/offer';
 import { changeCity } from './action';
-import { fetchOfferById, fetchOffers, fetchNearbyOffers } from './api-actions';
+import { fetchOfferById, fetchOffers, fetchNearbyOffers, fetchReviews } from './api-actions';
 
 export type CityName =
   | 'Paris'
@@ -18,6 +18,7 @@ export type State = {
   isOffersLoading: boolean;
   currentOffer: Offer | null;
   nearbyOffers: Offer[];
+  reviews: Review[];
 };
 
 export const initialState: State = {
@@ -26,6 +27,7 @@ export const initialState: State = {
   isOffersLoading: false,
   currentOffer: null,
   nearbyOffers: [],
+  reviews: [],
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -48,5 +50,8 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(fetchNearbyOffers.fulfilled, (state, action) => {
       state.nearbyOffers = action.payload;
+    })
+    .addCase(fetchReviews.fulfilled, (state, action: PayloadAction<Review[]>) => {
+      state.reviews = action.payload;
     });
 });
