@@ -14,9 +14,6 @@ export const createAPI = (): AxiosInstance => {
     if (token) {
       config.headers = config.headers || {};
       config.headers['X-Token'] = token;
-      console.log('Request intercepted: X-Token added');
-    } else {
-      console.log('Request intercepted: no token found');
     }
     return config;
   });
