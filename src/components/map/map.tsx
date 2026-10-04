@@ -14,14 +14,14 @@ type MapProps = {
 // Кастомные иконки маркеров
 const DEFAULT_ICON = icon({
   iconUrl: 'img/pin.svg',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
+  iconSize: [34, 38],
+  iconAnchor: [17, 38],
 });
 
 const ACTIVE_ICON = icon({
   iconUrl: 'img/pin-active.svg',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
+  iconSize: [34, 38],
+  iconAnchor: [17, 38],
 });
 
 function MapComponent({ offers }: MapProps): JSX.Element {

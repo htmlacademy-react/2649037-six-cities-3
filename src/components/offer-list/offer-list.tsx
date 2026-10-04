@@ -11,7 +11,7 @@ function OfferList({ offers }: OfferListProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   return (
-    <div className="places__list">
+    <div className="cities__places-list places__list tabs__content">
       {offers.map((offer) => (
         <OfferCard
           key={offer.id}

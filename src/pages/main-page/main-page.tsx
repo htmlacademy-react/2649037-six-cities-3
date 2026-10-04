@@ -91,9 +91,7 @@ function MainPage(): JSX.Element {
 
               <SortOptions />
 
-              <div className="cities__places-list places__list tabs__content">
-                <OfferList offers={cityOffers} />
-              </div>
+              <OfferList offers={cityOffers} />
             </section>
 
             <div className="cities__right-section">
