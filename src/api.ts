@@ -12,7 +12,11 @@ export const createAPI = (): AxiosInstance => {
   api.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers = config.headers || {};
+      config.headers['X-Token'] = token;
+      console.log('Request intercepted: X-Token added');
+    } else {
+      console.log('Request intercepted: no token found');
     }
     return config;
   });
