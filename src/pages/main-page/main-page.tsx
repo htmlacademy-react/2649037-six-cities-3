@@ -6,7 +6,8 @@ import { selectCity, selectOffersByCity, selectIsOffersLoading } from '../../sto
 import { CityName } from '../../store/reducer';
 import { CitiesList } from '../../components/cities-list/cities-list';
 import OfferList from '../../components/offer-list/offer-list';
-import Map from '../../components/map/map';
+import MapComponent from '../../components/map/map';
+import { SortOptions } from '../../components/sort-options/sort-options';
 
 const CITIES: CityName[] = [
   'Paris',
@@ -88,14 +89,14 @@ function MainPage(): JSX.Element {
                 {cityOffers.length} places to stay in {activeCity}
               </b>
 
-              <div className="cities__places-list places__list tabs__content">
-                <OfferList offers={cityOffers} />
-              </div>
+              <SortOptions />
+
+              <OfferList offers={cityOffers} />
             </section>
 
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map offers={cityOffers} />
+                <MapComponent offers={cityOffers} />
               </section>
             </div>
           </div>
