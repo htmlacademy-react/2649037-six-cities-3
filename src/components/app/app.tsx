@@ -10,7 +10,7 @@ import PrivateRoute from '../../components/private-router/private-router';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
-import { fetchOffers } from '../../store/api-actions';
+import { fetchOffers, checkAuthStatus } from '../../store/api-actions';
 
 
 function App(): JSX.Element {
@@ -18,6 +18,7 @@ function App(): JSX.Element {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    dispatch(checkAuthStatus());
     dispatch(fetchOffers());
   }, [dispatch]);
   return (

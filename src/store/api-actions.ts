@@ -1,10 +1,27 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Offer, Review } from '../types/offer';
 import { AxiosInstance } from 'axios';
+import { setAuthorizationStatus } from './action';
 
 type Extra = {
   extra: AxiosInstance;
 };
+
+export const checkAuthStatus = createAsyncThunk<void, undefined, Extra>(
+  'app/checkAuthStatus',
+  async (_arg, { extra: api, dispatch }) => {
+    try {
+      await api.get('/login');
+      dispatch(setAuthorizationStatus('authorized'));
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        dispatch(setAuthorizationStatus('unauthorized'));
+      } else {
+        dispatch(setAuthorizationStatus('unauthorized'));
+      }
+    }
+  },
+);
 
 export const fetchReviews = createAsyncThunk<Review[], string, Extra>(
   'data/fetchReviews',
