@@ -10,15 +10,16 @@ function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      await dispatch(login({ email, password })).unwrap();
-      navigate(AppRoute.Root);
-    } catch (error) {
-      console.error('Login failed:', error);
-      // Here we could add error message display for the user
-    }
+    void (async () => {
+      try {
+        await dispatch(login({ email, password })).unwrap();
+        navigate(AppRoute.Root);
+      } catch (error) {
+        // Handle error silently or with a UI notification
+      }
+    })();
   };
 
   return (

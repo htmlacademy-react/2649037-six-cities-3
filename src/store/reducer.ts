@@ -1,7 +1,7 @@
 import { createReducer, PayloadAction } from '@reduxjs/toolkit';
 import { DEFAULT_CITY } from '../const';
 import { Offer, Review } from '../types/offer';
-import { changeCity, changeSort, setActiveOffer } from './action';
+import { changeCity, changeSort, setActiveOffer, setAuthorizationStatus } from './action';
 import { fetchOfferById, fetchOffers, fetchNearbyOffers, fetchReviews } from './api-actions';
 
 export type CityName =
