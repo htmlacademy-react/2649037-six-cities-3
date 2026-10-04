@@ -14,7 +14,6 @@ import { fetchOffers, checkAuthStatus } from '../../store/api-actions';
 
 
 function App(): JSX.Element {
-  const authorizationStatus = AuthorizationStatus.NoAuth;
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -38,7 +37,7 @@ function App(): JSX.Element {
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
+            <PrivateRoute>
               <FavoritesPage />
             </PrivateRoute>
           }
