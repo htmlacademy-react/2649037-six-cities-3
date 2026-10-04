@@ -7,6 +7,15 @@ type Extra = {
   extra: AxiosInstance;
 };
 
+type LoginPayload = {
+  email: string;
+  password: string;
+};
+
+type AuthInfo = {
+  token: string;
+};
+
 export const checkAuthStatus = createAsyncThunk<void, undefined, Extra>(
   'app/checkAuthStatus',
   async (_arg, { extra: api, dispatch }) => {
@@ -20,6 +29,18 @@ export const checkAuthStatus = createAsyncThunk<void, undefined, Extra>(
         dispatch(setAuthorizationStatus('unauthorized'));
       }
     }
+  },
+);
+
+export const login = createAsyncThunk<AuthInfo, LoginPayload, Extra>(
+  'app/login',
+  async ({ email, password }, { extra: api, dispatch }) => {
+    const { data } = await api.post<AuthInfo>('/login', { email, password });
+
+    localStorage.setItem('token', data.token);
+    dispatch(setAuthorizationStatus('authorized'));
+
+    return data;
   },
 );
 
