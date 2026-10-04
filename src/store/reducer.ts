@@ -18,9 +18,12 @@ export type SortType =
   | 'Price: high to low'
   | 'Top rated first';
 
+export type AuthorizationStatus = 'unauthorized' | 'authorized' | 'unknown';
+
 export type State = {
   city: CityName;
   sort: SortType;
+  authorizationStatus: AuthorizationStatus;
   offers: Offer[];
   isOffersLoading: boolean;
   currentOffer: Offer | null;
@@ -32,6 +35,7 @@ export type State = {
 export const initialState: State = {
   city: DEFAULT_CITY,
   sort: 'Popular',
+  authorizationStatus: 'unknown',
   offers: [],
   isOffersLoading: false,
   currentOffer: null,
@@ -47,6 +51,9 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(changeSort, (state, action) => {
       state.sort = action.payload;
+    })
+    .addCase(setAuthorizationStatus, (state, action) => {
+      state.authorizationStatus = action.payload;
     })
     .addCase(setActiveOffer, (state, action) => {
       state.activeOfferId = action.payload;
