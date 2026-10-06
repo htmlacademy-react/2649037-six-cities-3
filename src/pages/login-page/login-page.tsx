@@ -12,6 +12,11 @@ function LoginPage(): JSX.Element {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!password.trim()) {
+      return;
+    }
+
     void (async () => {
       try {
         await dispatch(login({ email, password })).unwrap();

@@ -1,7 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Offer, Review } from '../types/offer';
-import axios, { AxiosInstance } from 'axios';
-import { setAuthorizationStatus } from './action';
+import { AxiosInstance } from 'axios';
+import { setAuthorizationStatus, setUser, UserInfo } from './action';
+import { AuthorizationStatus } from '../const';
 
 type Extra = {
   extra: AxiosInstance;
@@ -12,33 +13,27 @@ type LoginPayload = {
   password: string;
 };
 
-type AuthInfo = {
-  token: string;
-};
-
 export const checkAuthStatus = createAsyncThunk<void, undefined, Extra>(
   'app/checkAuthStatus',
   async (_arg, { extra: api, dispatch }) => {
     try {
-      await api.get('/login');
-      dispatch(setAuthorizationStatus('authorized'));
+      const { data } = await api.get<UserInfo>('/login');
+      dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
+      dispatch(setUser(data));
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        dispatch(setAuthorizationStatus('unauthorized'));
-      } else {
-        dispatch(setAuthorizationStatus('unauthorized'));
-      }
+      dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
     }
   },
 );
 
-export const login = createAsyncThunk<AuthInfo, LoginPayload, Extra>(
+export const login = createAsyncThunk<UserInfo, LoginPayload, Extra>(
   'app/login',
   async ({ email, password }, { extra: api, dispatch }) => {
-    const { data } = await api.post<AuthInfo>('/login', { email, password });
+    const { data } = await api.post<UserInfo>('/login', { email, password });
 
     localStorage.setItem('token', data.token);
-    dispatch(setAuthorizationStatus('authorized'));
+    dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
+    dispatch(setUser(data));
 
     return data;
   },

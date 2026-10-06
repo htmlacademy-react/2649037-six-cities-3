@@ -14,7 +14,7 @@ const SORT_OPTIONS: SortType[] = [
 
 export const SortOptions = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const currentSort = useAppSelector(selectSort);
+  const currentSort = useAppSelector((state) => selectSort(state));
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
