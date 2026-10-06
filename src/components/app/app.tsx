@@ -7,17 +7,17 @@ import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import MainPage from '../../pages/main-page/main-page';
 
 import PrivateRoute from '../../components/private-router/private-router';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute } from '../../const';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
-import { fetchOffers } from '../../store/api-actions';
+import { fetchOffers, checkAuthStatus } from '../../store/api-actions';
 
 
 function App(): JSX.Element {
-  const authorizationStatus = AuthorizationStatus.NoAuth;
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    dispatch(checkAuthStatus());
     dispatch(fetchOffers());
   }, [dispatch]);
   return (
@@ -37,7 +37,7 @@ function App(): JSX.Element {
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
+            <PrivateRoute>
               <FavoritesPage />
             </PrivateRoute>
           }

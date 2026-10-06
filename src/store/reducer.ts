@@ -1,7 +1,7 @@
 import { createReducer, PayloadAction } from '@reduxjs/toolkit';
-import { DEFAULT_CITY } from '../const';
+import { DEFAULT_CITY, AuthorizationStatus } from '../const';
 import { Offer, Review } from '../types/offer';
-import { changeCity, changeSort, setActiveOffer } from './action';
+import { changeCity, changeSort, setActiveOffer, setAuthorizationStatus, setUser, UserInfo } from './action';
 import { fetchOfferById, fetchOffers, fetchNearbyOffers, fetchReviews } from './api-actions';
 
 export type CityName =
@@ -21,6 +21,8 @@ export type SortType =
 export type State = {
   city: CityName;
   sort: SortType;
+  authorizationStatus: AuthorizationStatus;
+  user: UserInfo | null;
   offers: Offer[];
   isOffersLoading: boolean;
   currentOffer: Offer | null;
@@ -32,6 +34,8 @@ export type State = {
 export const initialState: State = {
   city: DEFAULT_CITY,
   sort: 'Popular',
+  authorizationStatus: AuthorizationStatus.Unknown,
+  user: null,
   offers: [],
   isOffersLoading: false,
   currentOffer: null,
@@ -47,6 +51,12 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(changeSort, (state, action) => {
       state.sort = action.payload;
+    })
+    .addCase(setAuthorizationStatus, (state, action) => {
+      state.authorizationStatus = action.payload;
+    })
+    .addCase(setUser, (state, action) => {
+      state.user = action.payload;
     })
     .addCase(setActiveOffer, (state, action) => {
       state.activeOfferId = action.payload;
