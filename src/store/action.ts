@@ -15,3 +15,4 @@ export const changeSort = createAction<SortType>('app/changeSort');
 export const setActiveOffer = createAction<string | null>('app/setActiveOffer');
 export const setAuthorizationStatus = createAction<AuthorizationStatus>('app/setAuthorizationStatus');
 export const setUser = createAction<UserInfo | null>('app/setUser');
+export const logout = createAction('app/logout');

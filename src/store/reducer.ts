@@ -1,7 +1,7 @@
 import { createReducer, PayloadAction } from '@reduxjs/toolkit';
 import { DEFAULT_CITY, AuthorizationStatus } from '../const';
 import { Offer, Review } from '../types/offer';
-import { changeCity, changeSort, setActiveOffer, setAuthorizationStatus, setUser, UserInfo } from './action';
+import { changeCity, changeSort, setActiveOffer, setAuthorizationStatus, setUser, UserInfo, logout } from './action';
 import { fetchOfferById, fetchOffers, fetchNearbyOffers, fetchReviews, postReview } from './api-actions';
 
 export type CityName =
@@ -57,6 +57,10 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setUser, (state, action) => {
       state.user = action.payload;
+    })
+    .addCase(logout, (state) => {
+      state.user = null;
+      state.authorizationStatus = AuthorizationStatus.NoAuth;
     })
     .addCase(setActiveOffer, (state, action) => {
       state.activeOfferId = action.payload;
