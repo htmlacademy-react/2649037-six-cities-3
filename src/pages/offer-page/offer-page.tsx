@@ -1,9 +1,20 @@
 import { useParams } from 'react-router-dom';
-import { fetchOfferById, fetchNearbyOffers, fetchReviews } from '../../store/api-actions';
+import {
+  fetchOfferById,
+  fetchNearbyOffers,
+  fetchReviews,
+  postReview,
+} from '../../store/api-actions';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
-import { selectCurrentOffer, selectNearbyOffers, selectReviews } from '../../store/selectors';
+import {
+  selectCurrentOffer,
+  selectNearbyOffers,
+  selectReviews,
+  selectAuthorizationStatus,
+} from '../../store/selectors';
+import { AuthorizationStatus } from '../../const';
 
 import NotFoundPage from '../not-found-page/not-found-page';
 import ReviewForm from '../../components/review-form/review-form';
@@ -26,10 +37,17 @@ function OfferPage(): JSX.Element {
   const offer = useAppSelector(selectCurrentOffer);
   const nearPlaces = useAppSelector(selectNearbyOffers);
   const reviews = useAppSelector(selectReviews);
+  const authStatus = useAppSelector(selectAuthorizationStatus);
 
   if (!offer) {
     return <NotFoundPage />;
   }
+
+  const handleReviewSubmit = (rating: number, comment: string) => {
+    if (id) {
+      dispatch(postReview({ id, rating, comment }));
+    }
+  };
 
   return (
     <div className="page">
@@ -188,7 +206,9 @@ function OfferPage(): JSX.Element {
 
               <section className="offer__reviews reviews">
                 <ReviewsList reviews={reviews} />
-                <ReviewForm onSubmit={() => {}} />
+                {authStatus === AuthorizationStatus.Auth && (
+                  <ReviewForm onSubmit={handleReviewSubmit} />
+                )}
               </section>
             </div>
           </div>

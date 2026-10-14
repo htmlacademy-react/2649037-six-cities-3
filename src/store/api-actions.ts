@@ -79,3 +79,18 @@ export const fetchOfferById = createAsyncThunk<Offer, string, Extra>(
   }
 );
 
+export type ReviewPayload = {
+  id: string;
+  rating: number;
+  comment: string;
+};
+
+export const postReview = createAsyncThunk<Review, ReviewPayload, Extra>(
+  'data/postReview',
+  async ({ id, rating, comment }, { extra: api }) => {
+    const { data } = await api.post<Review>(`/comments/${id}`, { rating, comment });
+
+    return data;
+  }
+);
+

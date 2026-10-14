@@ -2,7 +2,7 @@ import { createReducer, PayloadAction } from '@reduxjs/toolkit';
 import { DEFAULT_CITY, AuthorizationStatus } from '../const';
 import { Offer, Review } from '../types/offer';
 import { changeCity, changeSort, setActiveOffer, setAuthorizationStatus, setUser, UserInfo } from './action';
-import { fetchOfferById, fetchOffers, fetchNearbyOffers, fetchReviews } from './api-actions';
+import { fetchOfferById, fetchOffers, fetchNearbyOffers, fetchReviews, postReview } from './api-actions';
 
 export type CityName =
   | 'Paris'
@@ -79,5 +79,8 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(fetchReviews.fulfilled, (state, action: PayloadAction<Review[]>) => {
       state.reviews = action.payload;
+    })
+    .addCase(postReview.fulfilled, (state, action: PayloadAction<Review>) => {
+      state.reviews.push(action.payload);
     });
 });

@@ -33,4 +33,5 @@ export const selectCurrentOffer = (state: RootState) => state.currentOffer;
 
 export const selectNearbyOffers = (state: RootState): Offer[] => state.nearbyOffers;
 export const selectReviews = (state: RootState) => state.reviews;
+export const selectAuthorizationStatus = (state: RootState) => state.authorizationStatus;
 export const selectActiveOfferId = (state: RootState) => state.activeOfferId;
