@@ -1,11 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { reducer } from './reducer';
 import { createAPI } from '../api';
+import userReducer from './slices/userSlice';
+import dataReducer from './slices/dataSlice';
+import { UserState } from './slices/userSlice';
+import { DataState } from './slices/dataSlice';
 
 const api = createAPI();
 
 export const store = configureStore({
-  reducer,
+  reducer: {
+    user: userReducer,
+    data: dataReducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       thunk: {
@@ -14,5 +20,9 @@ export const store = configureStore({
     }),
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+export interface RootState {
+  user: UserState;
+  data: DataState;
+}
+
 export type AppDispatch = typeof store.dispatch;

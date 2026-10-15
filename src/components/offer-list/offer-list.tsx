@@ -1,5 +1,5 @@
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
-import { setActiveOffer } from '../../store/action';
+import { setActiveOffer } from '../../store/slices/dataSlice';
 import OfferCard from '../offer-card/offer-card';
 import { Offer } from '../../types/offer';
 

@@ -1,9 +1,9 @@
 import { useAppSelector } from '../../hooks/use-app-selector';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { Spinner } from '../../components/spinner/spinner';
-import { changeCity } from '../../store/action';
+import { changeCity } from '../../store/slices/dataSlice';
 import { selectCity, selectOffersByCity, selectIsOffersLoading } from '../../store/selectors';
-import { CityName } from '../../store/reducer';
+import { CityName } from '../../store/slices/dataSlice';
 import { CitiesList } from '../../components/cities-list/cities-list';
 import OfferList from '../../components/offer-list/offer-list';
 import MapComponent from '../../components/map/map';
@@ -25,8 +25,8 @@ function MainPage(): JSX.Element {
   const activeCity = useAppSelector(selectCity);
   const cityOffers = useAppSelector(selectOffersByCity);
   const isOffersLoading = useAppSelector(selectIsOffersLoading);
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const user = useAppSelector((state) => state.user);
+  const authorizationStatus = useAppSelector((state) => state.user.authorizationStatus);
+  const user = useAppSelector((state) => state.user.user);
 
   // Спиннер пока идет загрузка
   if (isOffersLoading) {
