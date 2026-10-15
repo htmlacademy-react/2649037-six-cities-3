@@ -1,9 +1,10 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   fetchOfferById,
   fetchNearbyOffers,
   fetchReviews,
   postReview,
+  toggleFavorite,
 } from '../../store/api-actions';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
@@ -21,10 +22,10 @@ import ReviewForm from '../../components/review-form/review-form';
 import ReviewsList from '../../components/review/reviews-list';
 import Map from '../../components/map/map';
 import OfferList from '../../components/offer-list/offer-list';
-import Header from '../../components/header/header';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
@@ -50,10 +51,16 @@ function OfferPage(): JSX.Element {
     }
   };
 
+  const handleBookmarkClick = () => {
+    if (authStatus === AuthorizationStatus.Auth) {
+      dispatch(toggleFavorite(offer.id));
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <div className="page">
-      <Header />
-
       <main className="page__main page__main--offer">
         <section className="offer">
           {/* GALLERY */}
@@ -85,6 +92,7 @@ function OfferPage(): JSX.Element {
                     offer.isFavorite ? 'offer__bookmark-button--active' : ''
                   }`}
                   type="button"
+                  onClick={handleBookmarkClick}
                 >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
