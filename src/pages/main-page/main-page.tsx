@@ -68,9 +68,9 @@ function MainPage(): JSX.Element {
 
               <SortOptions />
 
-              <OfferList 
-                offers={cityOffers} 
-                onBookmarkClick={handleBookmarkClick} 
+              <OfferList
+                offers={cityOffers}
+                onBookmarkClick={handleBookmarkClick}
               />
             </section>
 
