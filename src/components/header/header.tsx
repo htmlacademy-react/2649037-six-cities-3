@@ -42,14 +42,14 @@ function Header(): JSX.Element {
                       <div className="header__avatar-wrapper user__avatar-wrapper">
                         <img
                           className="user__avatar"
-                          src={user?.avatarUrl}
+                          src={user?.avatarUrl || ''}
                           alt="User avatar"
                           width="40"
                           height="40"
                         />
                       </div>
                       <span className="header__user-name user__name">
-                        {user?.email}
+                        {user?.email || ''}
                       </span>
                       <span className="header__favorite-count">0</span>
                     </Link>
@@ -68,7 +68,7 @@ function Header(): JSX.Element {
               ) : (
                 <li className="header__nav-item">
                   <Link className="header__nav-link" to="/login">
-                    <span className="header__login">Login</span>
+                    <span className="header__login">Sign in</span>
                   </Link>
                 </li>
               )}

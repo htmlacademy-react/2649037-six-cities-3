@@ -90,7 +90,15 @@ export const postReview = createAsyncThunk<Review, ReviewPayload, Extra>(
   async ({ id, rating, comment }, { extra: api }) => {
     const { data } = await api.post<Review>(`/comments/${id}`, { rating, comment });
 
-    //Slight error in original, let's just rewrite to be safe
+    return data;
+  }
+);
+
+export const toggleFavorite = createAsyncThunk<Offer, string, Extra>(
+  'data/toggleFavorite',
+  async (id, { extra: api }) => {
+    const { data } = await api.post<Offer>(`/favorites/${id}`);
+
     return data;
   }
 );

@@ -7,6 +7,7 @@ import {
   fetchNearbyOffers,
   fetchReviews,
   postReview,
+  toggleFavorite,
 } from '../api-actions';
 
 export type CityName =
@@ -82,6 +83,12 @@ const dataSlice = createSlice({
       })
       .addCase(postReview.fulfilled, (state, action) => {
         state.reviews.push(action.payload);
+      })
+      .addCase(toggleFavorite.fulfilled, (state, action) => {
+        const offer = state.offers.find((o) => o.id === action.payload.id);
+        if (offer) {
+          offer.isFavorite = action.payload.isFavorite;
+        }
       });
   },
 });
