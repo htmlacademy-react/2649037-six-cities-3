@@ -1,4 +1,4 @@
-import { CityName } from '../../store/reducer';
+import { CityName } from '../../store/slices/dataSlice';
 
 type Props = {
   cities: CityName[];

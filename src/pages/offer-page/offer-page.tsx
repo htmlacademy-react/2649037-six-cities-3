@@ -1,9 +1,21 @@
-import { useParams } from 'react-router-dom';
-import { fetchOfferById, fetchNearbyOffers, fetchReviews } from '../../store/api-actions';
+import { useParams, useNavigate } from 'react-router-dom';
+import {
+  fetchOfferById,
+  fetchNearbyOffers,
+  fetchReviews,
+  postReview,
+  toggleFavorite,
+} from '../../store/api-actions';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
-import { selectCurrentOffer, selectNearbyOffers, selectReviews } from '../../store/selectors';
+import {
+  selectCurrentOffer,
+  selectNearbyOffers,
+  selectReviews,
+  selectAuthorizationStatus,
+} from '../../store/selectors';
+import { AuthorizationStatus } from '../../const';
 
 import NotFoundPage from '../not-found-page/not-found-page';
 import ReviewForm from '../../components/review-form/review-form';
@@ -13,6 +25,7 @@ import OfferList from '../../components/offer-list/offer-list';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
@@ -26,54 +39,28 @@ function OfferPage(): JSX.Element {
   const offer = useAppSelector(selectCurrentOffer);
   const nearPlaces = useAppSelector(selectNearbyOffers);
   const reviews = useAppSelector(selectReviews);
+  const authStatus = useAppSelector(selectAuthorizationStatus);
 
   if (!offer) {
     return <NotFoundPage />;
   }
 
+  const handleReviewSubmit = (rating: number, comment: string) => {
+    if (id) {
+      dispatch(postReview({ id, rating, comment }));
+    }
+  };
+
+  const handleBookmarkClick = () => {
+    if (authStatus === AuthorizationStatus.Auth) {
+      dispatch(toggleFavorite(offer.id));
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <div className="page">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <a className="header__logo-link" href="/">
-                <img
-                  className="header__logo"
-                  src="img/logo.svg"
-                  alt="6 cities logo"
-                  width="81"
-                  height="41"
-                />
-              </a>
-            </div>
-
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a
-                    className="header__nav-link header__nav-link--profile"
-                    href="#"
-                  >
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                      Oliver.conner@gmail.com
-                    </span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
-
       <main className="page__main page__main--offer">
         <section className="offer">
           {/* GALLERY */}
@@ -105,6 +92,7 @@ function OfferPage(): JSX.Element {
                     offer.isFavorite ? 'offer__bookmark-button--active' : ''
                   }`}
                   type="button"
+                  onClick={handleBookmarkClick}
                 >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
@@ -188,7 +176,9 @@ function OfferPage(): JSX.Element {
 
               <section className="offer__reviews reviews">
                 <ReviewsList reviews={reviews} />
-                <ReviewForm onSubmit={() => {}} />
+                {authStatus === AuthorizationStatus.Auth && (
+                  <ReviewForm onSubmit={handleReviewSubmit} />
+                )}
               </section>
             </div>
           </div>
@@ -213,5 +203,4 @@ function OfferPage(): JSX.Element {
     </div>
   );
 }
-
 export default OfferPage;

@@ -6,9 +6,10 @@ type OfferCardProps = {
   offer: Offer;
   onMouseEnter?: (id: string) => void;
   onMouseLeave?: () => void;
+  onBookmarkClick?: () => void;
 };
 
-function OfferCard({ offer, onMouseEnter, onMouseLeave }: OfferCardProps): JSX.Element {
+function OfferCard({ offer, onMouseEnter, onMouseLeave, onBookmarkClick }: OfferCardProps): JSX.Element {
   return (
     <article
       className="place-card"
@@ -45,6 +46,7 @@ function OfferCard({ offer, onMouseEnter, onMouseLeave }: OfferCardProps): JSX.E
               offer.isFavorite ? 'place-card__bookmark-button--active' : ''
             }`}
             type="button"
+            onClick={onBookmarkClick}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>

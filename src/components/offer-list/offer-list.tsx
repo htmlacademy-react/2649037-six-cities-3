@@ -1,13 +1,14 @@
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
-import { setActiveOffer } from '../../store/action';
+import { setActiveOffer } from '../../store/slices/dataSlice';
 import OfferCard from '../offer-card/offer-card';
 import { Offer } from '../../types/offer';
 
 type OfferListProps = {
   offers: Offer[];
+  onBookmarkClick?: (offerId: string) => void;
 };
 
-function OfferList({ offers }: OfferListProps): JSX.Element {
+function OfferList({ offers, onBookmarkClick }: OfferListProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   return (
@@ -18,6 +19,7 @@ function OfferList({ offers }: OfferListProps): JSX.Element {
           offer={offer}
           onMouseEnter={() => dispatch(setActiveOffer(offer.id))}
           onMouseLeave={() => dispatch(setActiveOffer(null))}
+          onBookmarkClick={() => onBookmarkClick?.(offer.id)}
         />
       ))}
     </div>

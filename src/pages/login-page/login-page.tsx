@@ -1,19 +1,30 @@
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { login } from '../../store/api-actions';
 import { AppRoute } from '../../const';
+import { useAppSelector } from '../../hooks/use-app-selector';
+import { selectAuthorizationStatus } from '../../store/selectors';
+import { AuthorizationStatus } from '../../const';
 
 function LoginPage(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const authStatus = useAppSelector(selectAuthorizationStatus);
+
+  useEffect(() => {
+    if (authStatus === AuthorizationStatus.Auth) {
+      navigate(AppRoute.Root);
+    }
+  }, [authStatus, navigate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!password.trim()) {
+    if (!email.trim() || !password.trim()) {
       return;
     }
 

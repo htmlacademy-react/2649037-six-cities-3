@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
-import { changeSort } from '../../store/action';
+import { changeSort } from '../../store/slices/dataSlice';
 import { selectSort } from '../../store/selectors';
-import { SortType } from '../../store/reducer';
+import { SortType } from '../../store/slices/dataSlice';
 
 const SORT_OPTIONS: SortType[] = [
   'Popular',

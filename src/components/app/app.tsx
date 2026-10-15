@@ -7,6 +7,7 @@ import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import MainPage from '../../pages/main-page/main-page';
 
 import PrivateRoute from '../../components/private-router/private-router';
+import Header from '../../components/header/header';
 import { AppRoute } from '../../const';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
@@ -22,6 +23,7 @@ function App(): JSX.Element {
   }, [dispatch]);
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
 
         <Route

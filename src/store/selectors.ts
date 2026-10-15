@@ -1,18 +1,25 @@
 import { RootState } from './index';
 import { createSelector } from 'reselect';
-import { Offer } from '../types/offer';
-export const selectCity = (state: RootState) => state.city;
+import { Offer, User, Review } from '../types/offer';
+import { AuthorizationStatus } from '../const';
+import { CityName, SortType } from './slices/dataSlice';
 
-export const selectOffers = (state: RootState) => state.offers;
+export const selectCity = (state: RootState): CityName => state.data.city;
 
-export const selectOfferById = (state: RootState, id: string) =>
-  state.offers.find((offer) => offer.id === id);
+export const selectOffers = (state: RootState): Offer[] => state.data.offers;
 
-export const selectSort = (state: RootState) => state.sort;
+export const selectOfferById = (state: RootState, id: string): Offer | undefined =>
+  state.data.offers.find((offer) => offer.id === id);
+
+export const selectSort = (state: RootState): SortType => state.data.sort;
 
 export const selectOffersByCity = createSelector(
-  [(state: RootState) => state.offers, (state: RootState) => state.city, (state: RootState) => state.sort],
-  (offers, city, sort) => {
+  [
+    (state: RootState) => state.data.offers,
+    (state: RootState) => state.data.city,
+    (state: RootState) => state.data.sort,
+  ],
+  (offers, city, sort): Offer[] => {
     const cityOffers = offers.filter((offer) => offer.city.name === city);
 
     switch (sort) {
@@ -27,10 +34,17 @@ export const selectOffersByCity = createSelector(
     }
   }
 );
-export const selectIsOffersLoading = (state: RootState) => state.isOffersLoading;
 
-export const selectCurrentOffer = (state: RootState) => state.currentOffer;
+export const selectIsOffersLoading = (state: RootState): boolean => state.data.isOffersLoading;
 
-export const selectNearbyOffers = (state: RootState): Offer[] => state.nearbyOffers;
-export const selectReviews = (state: RootState) => state.reviews;
-export const selectActiveOfferId = (state: RootState) => state.activeOfferId;
+export const selectCurrentOffer = (state: RootState): Offer | null => state.data.currentOffer;
+
+export const selectNearbyOffers = (state: RootState): Offer[] => state.data.nearbyOffers;
+
+export const selectReviews = (state: RootState): Review[] => state.data.reviews;
+
+export const selectAuthorizationStatus = (state: RootState): AuthorizationStatus => state.user.authorizationStatus;
+
+export const selectUser = (state: RootState): User | null => state.user.user;
+
+export const selectActiveOfferId = (state: RootState): string | null => state.data.activeOfferId;

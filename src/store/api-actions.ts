@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Offer, Review } from '../types/offer';
+import { Offer, Review, User } from '../types/offer';
 import { AxiosInstance } from 'axios';
-import { setAuthorizationStatus, setUser, UserInfo } from './action';
+import { setAuthorizationStatus, setUser } from './slices/userSlice';
 import { AuthorizationStatus } from '../const';
 
 type Extra = {
@@ -17,7 +17,7 @@ export const checkAuthStatus = createAsyncThunk<void, undefined, Extra>(
   'app/checkAuthStatus',
   async (_arg, { extra: api, dispatch }) => {
     try {
-      const { data } = await api.get<UserInfo>('/login');
+      const { data } = await api.get<User>('/login');
       dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
       dispatch(setUser(data));
     } catch (error) {
@@ -26,10 +26,10 @@ export const checkAuthStatus = createAsyncThunk<void, undefined, Extra>(
   },
 );
 
-export const login = createAsyncThunk<UserInfo, LoginPayload, Extra>(
+export const login = createAsyncThunk<User, LoginPayload, Extra>(
   'app/login',
   async ({ email, password }, { extra: api, dispatch }) => {
-    const { data } = await api.post<UserInfo>('/login', { email, password });
+    const { data } = await api.post<User>('/login', { email, password });
 
     localStorage.setItem('token', data.token);
     dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
@@ -74,6 +74,30 @@ export const fetchOfferById = createAsyncThunk<Offer, string, Extra>(
   'data/fetchOfferById',
   async (id, { extra: api }) => {
     const { data } = await api.get<Offer>(`/offers/${id}`);
+
+    return data;
+  }
+);
+
+export type ReviewPayload = {
+  id: string;
+  rating: number;
+  comment: string;
+};
+
+export const postReview = createAsyncThunk<Review, ReviewPayload, Extra>(
+  'data/postReview',
+  async ({ id, rating, comment }, { extra: api }) => {
+    const { data } = await api.post<Review>(`/comments/${id}`, { rating, comment });
+
+    return data;
+  }
+);
+
+export const toggleFavorite = createAsyncThunk<Offer, string, Extra>(
+  'data/toggleFavorite',
+  async (id, { extra: api }) => {
+    const { data } = await api.post<Offer>(`/favorites/${id}`);
 
     return data;
   }
