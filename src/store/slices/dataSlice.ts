@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Offer, Review } from '../../types/offer';
 import { DEFAULT_CITY } from '../../const';
+import { logout } from './userSlice';
 import {
   fetchOfferById,
   fetchOffers,
@@ -109,6 +110,17 @@ const dataSlice = createSlice({
 
         if (state.currentOffer?.id === updated.id) {
           state.currentOffer.isFavorite = updated.isFavorite;
+        }
+      })
+      .addCase(logout, (state) => {
+        state.offers.forEach((offer) => {
+          offer.isFavorite = false;
+        });
+        state.nearbyOffers.forEach((offer) => {
+          offer.isFavorite = false;
+        });
+        if (state.currentOffer) {
+          state.currentOffer.isFavorite = false;
         }
       });
   },

@@ -1,19 +1,28 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
-import { selectAuthorizationStatus, selectUser, selectFavoriteCount } from '../../store/selectors';
-import { AuthorizationStatus } from '../../const';
+import {
+  selectAuthorizationStatus,
+  selectUser,
+  selectFavoriteCount,
+} from '../../store/selectors';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { logout } from '../../store/slices/userSlice';
 
 function Header(): JSX.Element {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const authStatus = useAppSelector(selectAuthorizationStatus);
   const user = useAppSelector(selectUser);
+  const favoriteCount = useAppSelector(selectFavoriteCount);
+
+  const isLoginPage = location.pathname === String(AppRoute.Login);
 
   const handleLogout = (evt: React.MouseEvent) => {
     evt.preventDefault();
-    dispatch({ type: 'app/logout' });
+    localStorage.removeItem('token');
+    dispatch(logout());
   };
-  const favoriteCount = useAppSelector(selectFavoriteCount);
 
   return (
     <header className="header">
@@ -31,50 +40,54 @@ function Header(): JSX.Element {
             </Link>
           </div>
 
-          <nav className="header__nav">
-            <ul className="header__nav-list">
-              {authStatus === AuthorizationStatus.Auth ? (
-                <>
-                  <li className="header__nav-item user">
-                    <Link
-                      className="header__nav-link header__nav-link--profile"
-                      to="/favorites"
-                    >
-                      <div className="header__avatar-wrapper user__avatar-wrapper">
-                        <img
-                          className="user__avatar"
-                          src={user?.avatarUrl || ''}
-                          alt="User avatar"
-                          width="40"
-                          height="40"
-                        />
-                      </div>
-                      <span className="header__user-name user__name">
-                        {user?.email || ''}
-                      </span>
-                      <span className="header__favorite-count">{favoriteCount}</span>
+          {!isLoginPage && (
+            <nav className="header__nav">
+              <ul className="header__nav-list">
+                {authStatus === AuthorizationStatus.Auth ? (
+                  <>
+                    <li className="header__nav-item user">
+                      <Link
+                        className="header__nav-link header__nav-link--profile"
+                        to="/favorites"
+                      >
+                        <div className="header__avatar-wrapper user__avatar-wrapper">
+                          <img
+                            className="user__avatar"
+                            src={user?.avatarUrl || ''}
+                            alt="User avatar"
+                            width="40"
+                            height="40"
+                          />
+                        </div>
+                        <span className="header__user-name user__name">
+                          {user?.email || ''}
+                        </span>
+                        <span className="header__favorite-count">
+                          {favoriteCount}
+                        </span>
+                      </Link>
+                    </li>
+
+                    <li className="header__nav-item">
+                      <a
+                        className="header__nav-link"
+                        href="#"
+                        onClick={handleLogout}
+                      >
+                        <span className="header__signout">Sign out</span>
+                      </a>
+                    </li>
+                  </>
+                ) : (
+                  <li className="header__nav-item">
+                    <Link className="header__nav-link" to="/login">
+                      <span className="header__login">Sign in</span>
                     </Link>
                   </li>
-
-                  <li className="header__nav-item">
-                    <a
-                      className="header__nav-link"
-                      href="#"
-                      onClick={handleLogout}
-                    >
-                      <span className="header__signout">Sign out</span>
-                    </a>
-                  </li>
-                </>
-              ) : (
-                <li className="header__nav-item">
-                  <Link className="header__nav-link" to="/login">
-                    <span className="header__login">Sign in</span>
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </nav>
+                )}
+              </ul>
+            </nav>
+          )}
         </div>
       </div>
     </header>
