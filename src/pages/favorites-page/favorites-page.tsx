@@ -26,10 +26,10 @@ function FavoritesPage(): JSX.Element {
               <ul className="favorites__list">
                 <li className="favorites__locations-items">
                   <div className="favorites__places">
-                    <OfferList 
-                      offers={favoriteOffers} 
-                      onBookmarkClick={handleBookmarkClick} 
-                      variant="favorites" 
+                    <OfferList
+                      offers={favoriteOffers}
+                      onBookmarkClick={handleBookmarkClick}
+                      variant="favorites"
                     />
                   </div>
                 </li>

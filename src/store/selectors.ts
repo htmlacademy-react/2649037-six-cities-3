@@ -37,6 +37,8 @@ export const selectOffersByCity = createSelector(
 
 export const selectIsOffersLoading = (state: RootState): boolean => state.data.isOffersLoading;
 
+export const selectIsOfferLoading = (state: RootState): boolean => state.data.isOfferLoading;
+
 export const selectCurrentOffer = (state: RootState): Offer | null => state.data.currentOffer;
 
 export const selectNearbyOffers = (state: RootState): Offer[] => state.data.nearbyOffers;
