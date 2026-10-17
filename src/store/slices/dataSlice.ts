@@ -95,9 +95,20 @@ const dataSlice = createSlice({
         state.reviews.push(action.payload);
       })
       .addCase(toggleFavorite.fulfilled, (state, action) => {
-        const offer = state.offers.find((o) => o.id === action.payload.id);
-        if (offer) {
-          offer.isFavorite = action.payload.isFavorite;
+        const updated = action.payload;
+
+        const inOffers = state.offers.find((o) => o.id === updated.id);
+        if (inOffers) {
+          inOffers.isFavorite = updated.isFavorite;
+        }
+
+        const inNearby = state.nearbyOffers.find((o) => o.id === updated.id);
+        if (inNearby) {
+          inNearby.isFavorite = updated.isFavorite;
+        }
+
+        if (state.currentOffer?.id === updated.id) {
+          state.currentOffer.isFavorite = updated.isFavorite;
         }
       });
   },

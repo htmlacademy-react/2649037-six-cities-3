@@ -16,7 +16,7 @@ import {
   selectAuthorizationStatus,
   selectIsOfferLoading,
 } from '../../store/selectors';
-import { AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 
 import NotFoundPage from '../not-found-page/not-found-page';
 import ReviewForm from '../../components/review-form/review-form';
@@ -52,18 +52,43 @@ function OfferPage(): JSX.Element {
     return <NotFoundPage />;
   }
 
+  const handleBookmarkClick = () => {
+    if (authStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+
+    dispatch(
+      toggleFavorite({
+        id: offer.id,
+        isFavorite: !offer.isFavorite,
+      }),
+    );
+  };
+
   const handleReviewSubmit = (rating: number, comment: string) => {
     if (id) {
       dispatch(postReview({ id, rating, comment }));
     }
   };
 
-  const handleBookmarkClick = () => {
-    if (authStatus === AuthorizationStatus.Auth) {
-      dispatch(toggleFavorite(offer.id));
-    } else {
-      navigate('/login');
+  const handleNearbyBookmarkClick = (offerId: string) => {
+    if (authStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
     }
+
+    const nearbyOffer = nearPlaces.find((o) => o.id === offerId);
+    if (!nearbyOffer) {
+      return;
+    }
+
+    dispatch(
+      toggleFavorite({
+        id: nearbyOffer.id,
+        isFavorite: !nearbyOffer.isFavorite,
+      }),
+    );
   };
 
   return (
@@ -204,7 +229,10 @@ function OfferPage(): JSX.Element {
             </h2>
 
             <div className="near-places__list places__list">
-              <OfferList offers={nearPlaces} />
+              <OfferList
+                offers={nearPlaces}
+                onBookmarkClick={handleNearbyBookmarkClick}
+              />
             </div>
           </section>
         </div>
