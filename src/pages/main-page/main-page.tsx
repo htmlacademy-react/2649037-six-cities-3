@@ -3,7 +3,11 @@ import { useAppSelector } from '../../hooks/use-app-selector';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { Spinner } from '../../components/spinner/spinner';
 import { changeCity } from '../../store/slices/dataSlice';
-import { selectCity, selectOffersByCity, selectIsOffersLoading } from '../../store/selectors';
+import {
+  selectCity,
+  selectOffersByCity,
+  selectIsOffersLoading,
+} from '../../store/selectors';
 import { CityName } from '../../store/slices/dataSlice';
 import { CitiesList } from '../../components/cities-list/cities-list';
 import OfferList from '../../components/offer-list/offer-list';
@@ -27,14 +31,27 @@ function MainPage(): JSX.Element {
   const activeCity = useAppSelector(selectCity);
   const cityOffers = useAppSelector(selectOffersByCity);
   const isOffersLoading = useAppSelector(selectIsOffersLoading);
-  const authorizationStatus = useAppSelector((state) => state.user.authorizationStatus);
+  const authorizationStatus = useAppSelector(
+    (state) => state.user.authorizationStatus,
+  );
 
   const handleBookmarkClick = (offerId: string) => {
-    if (authorizationStatus === AuthorizationStatus.Auth) {
-      dispatch(toggleFavorite(offerId));
-    } else {
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
       navigate(AppRoute.Login);
+      return;
     }
+
+    const offer = cityOffers.find((o) => o.id === offerId);
+    if (!offer) {
+      return;
+    }
+
+    dispatch(
+      toggleFavorite({
+        id: offer.id,
+        isFavorite: !offer.isFavorite,
+      }),
+    );
   };
 
   // Спиннер пока идет загрузка

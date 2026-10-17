@@ -37,6 +37,8 @@ export const selectOffersByCity = createSelector(
 
 export const selectIsOffersLoading = (state: RootState): boolean => state.data.isOffersLoading;
 
+export const selectIsOfferLoading = (state: RootState): boolean => state.data.isOfferLoading;
+
 export const selectCurrentOffer = (state: RootState): Offer | null => state.data.currentOffer;
 
 export const selectNearbyOffers = (state: RootState): Offer[] => state.data.nearbyOffers;
@@ -48,3 +50,9 @@ export const selectAuthorizationStatus = (state: RootState): AuthorizationStatus
 export const selectUser = (state: RootState): User | null => state.user.user;
 
 export const selectActiveOfferId = (state: RootState): string | null => state.data.activeOfferId;
+
+export const selectFavorites = (state: RootState): Offer[] =>
+  state.data.offers.filter((offer) => offer.isFavorite);
+
+export const selectFavoriteCount = (state: RootState): number =>
+  selectFavorites(state).length;

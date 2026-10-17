@@ -14,14 +14,16 @@ import {
   selectNearbyOffers,
   selectReviews,
   selectAuthorizationStatus,
+  selectIsOfferLoading,
 } from '../../store/selectors';
-import { AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 
 import NotFoundPage from '../not-found-page/not-found-page';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewsList from '../../components/review/reviews-list';
 import Map from '../../components/map/map';
 import OfferList from '../../components/offer-list/offer-list';
+import { Spinner } from '../../components/spinner/spinner';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -40,10 +42,29 @@ function OfferPage(): JSX.Element {
   const nearPlaces = useAppSelector(selectNearbyOffers);
   const reviews = useAppSelector(selectReviews);
   const authStatus = useAppSelector(selectAuthorizationStatus);
+  const isOfferLoading = useAppSelector(selectIsOfferLoading);
+
+  if (isOfferLoading) {
+    return <Spinner />;
+  }
 
   if (!offer) {
     return <NotFoundPage />;
   }
+
+  const handleBookmarkClick = () => {
+    if (authStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+
+    dispatch(
+      toggleFavorite({
+        id: offer.id,
+        isFavorite: !offer.isFavorite,
+      }),
+    );
+  };
 
   const handleReviewSubmit = (rating: number, comment: string) => {
     if (id) {
@@ -51,12 +72,23 @@ function OfferPage(): JSX.Element {
     }
   };
 
-  const handleBookmarkClick = () => {
-    if (authStatus === AuthorizationStatus.Auth) {
-      dispatch(toggleFavorite(offer.id));
-    } else {
-      navigate('/login');
+  const handleNearbyBookmarkClick = (offerId: string) => {
+    if (authStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
     }
+
+    const nearbyOffer = nearPlaces.find((o) => o.id === offerId);
+    if (!nearbyOffer) {
+      return;
+    }
+
+    dispatch(
+      toggleFavorite({
+        id: nearbyOffer.id,
+        isFavorite: !nearbyOffer.isFavorite,
+      }),
+    );
   };
 
   return (
@@ -65,15 +97,17 @@ function OfferPage(): JSX.Element {
         <section className="offer">
           {/* GALLERY */}
           <div className="offer__gallery-container container">
-            {offer.images?.length ? (
-              offer.images.map((img) => (
-                <div key={img} className="offer__image-wrapper">
-                  <img className="offer__image" src={img} alt={offer.title} />
-                </div>
-              ))
-            ) : (
-              <p className="offer__no-images">Нет изображений</p>
-            )}
+            <div className="offer__gallery">
+              {offer.images?.length ? (
+                offer.images.map((img) => (
+                  <div key={img} className="offer__image-wrapper">
+                    <img className="offer__image" src={img} alt={offer.title} />
+                  </div>
+                ))
+              ) : (
+                <p className="offer__no-images">Нет изображений</p>
+              )}
+            </div>
           </div>
 
           <div className="offer__container container">
@@ -195,7 +229,10 @@ function OfferPage(): JSX.Element {
             </h2>
 
             <div className="near-places__list places__list">
-              <OfferList offers={nearPlaces} />
+              <OfferList
+                offers={nearPlaces}
+                onBookmarkClick={handleNearbyBookmarkClick}
+              />
             </div>
           </section>
         </div>

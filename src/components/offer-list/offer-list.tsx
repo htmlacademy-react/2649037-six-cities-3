@@ -6,9 +6,10 @@ import { Offer } from '../../types/offer';
 type OfferListProps = {
   offers: Offer[];
   onBookmarkClick?: (offerId: string) => void;
+  variant?: 'main' | 'favorites';
 };
 
-function OfferList({ offers, onBookmarkClick }: OfferListProps): JSX.Element {
+function OfferList({ offers, onBookmarkClick, variant = 'main' }: OfferListProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   return (
@@ -20,6 +21,7 @@ function OfferList({ offers, onBookmarkClick }: OfferListProps): JSX.Element {
           onMouseEnter={() => dispatch(setActiveOffer(offer.id))}
           onMouseLeave={() => dispatch(setActiveOffer(null))}
           onBookmarkClick={() => onBookmarkClick?.(offer.id)}
+          variant={variant}
         />
       ))}
     </div>

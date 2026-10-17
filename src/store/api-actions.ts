@@ -94,12 +94,18 @@ export const postReview = createAsyncThunk<Review, ReviewPayload, Extra>(
   }
 );
 
-export const toggleFavorite = createAsyncThunk<Offer, string, Extra>(
+
+export type ToggleFavoritePayload = {
+  id: string;
+  isFavorite: boolean;
+};
+
+export const toggleFavorite = createAsyncThunk<Offer, ToggleFavoritePayload, Extra>(
   'data/toggleFavorite',
-  async (id, { extra: api }) => {
-    const { data } = await api.post<Offer>(`/favorites/${id}`);
+  async ({ id, isFavorite }, { extra: api }) => {
+    const status = isFavorite ? 1 : 0;
+    const { data } = await api.post<Offer>(`/favorite/${id}/${status}`);
 
     return data;
   }
 );
-

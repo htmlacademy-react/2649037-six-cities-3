@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
-import { selectAuthorizationStatus, selectUser } from '../../store/selectors';
+import { selectAuthorizationStatus, selectUser, selectFavoriteCount } from '../../store/selectors';
 import { AuthorizationStatus } from '../../const';
 
 function Header(): JSX.Element {
@@ -13,6 +13,7 @@ function Header(): JSX.Element {
     evt.preventDefault();
     dispatch({ type: 'app/logout' });
   };
+  const favoriteCount = useAppSelector(selectFavoriteCount);
 
   return (
     <header className="header">
@@ -51,7 +52,7 @@ function Header(): JSX.Element {
                       <span className="header__user-name user__name">
                         {user?.email || ''}
                       </span>
-                      <span className="header__favorite-count">0</span>
+                      <span className="header__favorite-count">{favoriteCount}</span>
                     </Link>
                   </li>
 

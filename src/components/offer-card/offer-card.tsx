@@ -7,12 +7,15 @@ type OfferCardProps = {
   onMouseEnter?: (id: string) => void;
   onMouseLeave?: () => void;
   onBookmarkClick?: () => void;
+  variant?: 'main' | 'favorites';
 };
 
-function OfferCard({ offer, onMouseEnter, onMouseLeave, onBookmarkClick }: OfferCardProps): JSX.Element {
+function OfferCard({ offer, onMouseEnter, onMouseLeave, onBookmarkClick, variant = 'main' }: OfferCardProps): JSX.Element {
+  const isFavorites = variant === 'favorites';
+
   return (
     <article
-      className="place-card"
+      className={`place-card ${isFavorites ? 'favorites__card' : 'cities__card'}`}
       onMouseEnter={() => onMouseEnter?.(offer.id)}
       onMouseLeave={() => onMouseLeave?.()}
     >
@@ -22,19 +25,19 @@ function OfferCard({ offer, onMouseEnter, onMouseLeave, onBookmarkClick }: Offer
         </div>
       )}
 
-      <div className="place-card__image-wrapper">
+      <div className={`${isFavorites ? 'favorites__image-wrapper' : 'cities__image-wrapper'} place-card__image-wrapper`}>
         <Link to={AppRoute.Offer.replace(':id', offer.id)}>
           <img
             className="place-card__image"
             src={offer.previewImage}
-            width="260"
-            height="200"
+            width={isFavorites ? 150 : 260}
+            height={isFavorites ? 110 : 200}
             alt={offer.title}
           />
         </Link>
       </div>
 
-      <div className="place-card__info">
+      <div className={`${isFavorites ? 'favorites__card-info' : ''} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">€{offer.price}</b>
