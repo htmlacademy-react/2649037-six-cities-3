@@ -9,6 +9,7 @@ import MainPage from '../../pages/main-page/main-page';
 
 import PrivateRoute from '../../components/private-router/private-router';
 import Header from '../../components/header/header';
+import ServerError from '../../components/server-error/server-error';
 import { AppRoute } from '../../const';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
@@ -29,6 +30,7 @@ function App(): JSX.Element {
 
   return (
     <BrowserRouter>
+      <ServerError />
       <Header />
       <Routes>
         <Route path={AppRoute.Root} element={<MainPage />} />

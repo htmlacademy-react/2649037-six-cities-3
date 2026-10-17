@@ -69,3 +69,5 @@ export const selectFavoritesByCity = createSelector(
       return acc;
     }, {})
 );
+
+export const selectError = (state: RootState): string | null => state.data.error;
