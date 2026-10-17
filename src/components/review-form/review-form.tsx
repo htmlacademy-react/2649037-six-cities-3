@@ -1,7 +1,15 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { Fragment, useState, ChangeEvent, FormEvent } from 'react';
 
 type ReviewFormProps = {
   onSubmit: (rating: number, comment: string) => void;
+};
+
+const RATING_TITLES: Record<number, string> = {
+  5: 'perfect',
+  4: 'good',
+  3: 'not bad',
+  2: 'badly',
+  1: 'terribly',
 };
 
 function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
@@ -34,28 +42,32 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
       </label>
 
       <div className="reviews__rating-form form__rating">
-        {[5, 4, 3, 2, 1].map((star) => (
-          <div key={star}>
-            <input
-              className="form__rating-input visually-hidden"
-              name="rating"
-              value={star}
-              id={`${star}-stars`}
-              type="radio"
-              checked={rating === star}
-              onChange={handleRatingChange}
-            />
-            <label
-              htmlFor={`${star}-stars`}
-              className="reviews__rating-label form__rating-label"
-              title="rating"
-            >
-              <svg className="form__star-image" width="37" height="33">
-                <use xlinkHref="#icon-star"></use>
-              </svg>
-            </label>
-          </div>
-        ))}
+        {[5, 4, 3, 2, 1].map((star) => {
+          const inputId = star === 1 ? '1-star' : `${star}-stars`;
+
+          return (
+            <Fragment key={star}>
+              <input
+                className="form__rating-input visually-hidden"
+                name="rating"
+                value={star}
+                id={inputId}
+                type="radio"
+                checked={rating === star}
+                onChange={handleRatingChange}
+              />
+              <label
+                htmlFor={inputId}
+                className="reviews__rating-label form__rating-label"
+                title={RATING_TITLES[star]}
+              >
+                <svg className="form__star-image" width="37" height="33">
+                  <use xlinkHref="#icon-star"></use>
+                </svg>
+              </label>
+            </Fragment>
+          );
+        })}
       </div>
 
       <textarea
