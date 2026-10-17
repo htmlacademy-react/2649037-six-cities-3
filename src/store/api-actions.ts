@@ -109,3 +109,12 @@ export const toggleFavorite = createAsyncThunk<Offer, ToggleFavoritePayload, Ext
     return data;
   }
 );
+
+export const fetchFavorites = createAsyncThunk<Offer[], undefined, Extra>(
+  'data/fetchFavorites',
+  async (_arg, { extra: api }) => {
+    const { data } = await api.get<Offer[]>('/favorite');
+
+    return data;
+  }
+);

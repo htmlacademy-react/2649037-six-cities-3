@@ -7,6 +7,7 @@ import {
   fetchOffers,
   fetchNearbyOffers,
   fetchReviews,
+  fetchFavorites,
   postReview,
   toggleFavorite,
 } from '../api-actions';
@@ -121,6 +122,20 @@ const dataSlice = createSlice({
         });
         if (state.currentOffer) {
           state.currentOffer.isFavorite = false;
+        }
+      })
+      .addCase(fetchFavorites.fulfilled, (state, action) => {
+        const favoriteIds = new Set(action.payload.map((offer) => offer.id));
+        state.offers.forEach((offer) => {
+          offer.isFavorite = favoriteIds.has(offer.id);
+        });
+        state.nearbyOffers.forEach((offer) => {
+          offer.isFavorite = favoriteIds.has(offer.id);
+        });
+        if (state.currentOffer) {
+          state.currentOffer.isFavorite = favoriteIds.has(
+            state.currentOffer.id,
+          );
         }
       });
   },
