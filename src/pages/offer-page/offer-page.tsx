@@ -72,15 +72,17 @@ function OfferPage(): JSX.Element {
         <section className="offer">
           {/* GALLERY */}
           <div className="offer__gallery-container container">
-            {offer.images?.length ? (
-              offer.images.map((img) => (
-                <div key={img} className="offer__image-wrapper">
-                  <img className="offer__image" src={img} alt={offer.title} />
-                </div>
-              ))
-            ) : (
-              <p className="offer__no-images">Нет изображений</p>
-            )}
+            <div className="offer__gallery">
+              {offer.images?.length ? (
+                offer.images.map((img) => (
+                  <div key={img} className="offer__image-wrapper">
+                    <img className="offer__image" src={img} alt={offer.title} />
+                  </div>
+                ))
+              ) : (
+                <p className="offer__no-images">Нет изображений</p>
+              )}
+            </div>
           </div>
 
           <div className="offer__container container">
