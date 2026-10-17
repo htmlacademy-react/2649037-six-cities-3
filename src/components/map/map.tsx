@@ -9,9 +9,9 @@ import 'leaflet/dist/leaflet.css';
 
 type MapProps = {
   offers: Offer[];
+  currentOfferId?: string;
 };
 
-// Кастомные иконки маркеров
 const DEFAULT_ICON = icon({
   iconUrl: 'img/pin.svg',
   iconSize: [34, 38],
@@ -24,12 +24,11 @@ const ACTIVE_ICON = icon({
   iconAnchor: [17, 38],
 });
 
-function MapComponent({ offers }: MapProps): JSX.Element {
+function MapComponent({ offers, currentOfferId }: MapProps): JSX.Element {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const activeOfferId = useAppSelector(selectActiveOfferId);
   const markersRef = useRef<Map<string, Marker>>(new Map());
 
-  // координаты города
   const cityLocation = offers[0]?.city.location;
 
   const map = useMap(
@@ -39,7 +38,6 @@ function MapComponent({ offers }: MapProps): JSX.Element {
       : DEFAULT_MAP_LOCATION
   );
 
-  // ДВИГАЕМ КАРТУ ПРИ СМЕНЕ ГОРОДА
   useEffect(() => {
     if (map && cityLocation) {
       map.setView(
@@ -49,7 +47,6 @@ function MapComponent({ offers }: MapProps): JSX.Element {
     }
   }, [map, cityLocation]);
 
-  // Обновляем маркеры
   useEffect(() => {
     if (!map) {
       return;
@@ -59,10 +56,13 @@ function MapComponent({ offers }: MapProps): JSX.Element {
     const markerLayer = layerGroup().addTo(map);
 
     offers.forEach((offer) => {
+      const isActive =
+        offer.id === currentOfferId || offer.id === activeOfferId;
+
       const marker = new Marker(
         [offer.location.latitude, offer.location.longitude],
         {
-          icon: offer.id === activeOfferId ? ACTIVE_ICON : DEFAULT_ICON,
+          icon: isActive ? ACTIVE_ICON : DEFAULT_ICON,
         }
       );
 
@@ -74,7 +74,7 @@ function MapComponent({ offers }: MapProps): JSX.Element {
       map.removeLayer(markerLayer);
       markers.clear();
     };
-  }, [map, offers, activeOfferId]);
+  }, [map, offers, activeOfferId, currentOfferId]);
 
   return <div ref={mapRef} style={{ height: '100%' }} />;
 }

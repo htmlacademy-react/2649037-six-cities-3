@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Offer, Review, User } from '../types/offer';
 import { AxiosInstance } from 'axios';
 import { setAuthorizationStatus, setUser } from './slices/userSlice';
-import { AuthorizationStatus } from '../const';
+import { AuthorizationStatus, TOKEN_KEY } from '../const';
 
 type Extra = {
   extra: AxiosInstance;
@@ -31,7 +31,7 @@ export const login = createAsyncThunk<User, LoginPayload, Extra>(
   async ({ email, password }, { extra: api, dispatch }) => {
     const { data } = await api.post<User>('/login', { email, password });
 
-    localStorage.setItem('token', data.token);
+    localStorage.setItem(TOKEN_KEY, data.token);
     dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
     dispatch(setUser(data));
 
