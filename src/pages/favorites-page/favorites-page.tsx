@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { selectOffers } from '../../store/selectors';
-import OfferCard from '../../components/offer-card/offer-card';
+import OfferList from '../../components/offer-list/offer-list';
 import { toggleFavorite } from '../../store/api-actions';
 
 function FavoritesPage(): JSX.Element {
@@ -26,13 +26,11 @@ function FavoritesPage(): JSX.Element {
               <ul className="favorites__list">
                 <li className="favorites__locations-items">
                   <div className="favorites__places">
-                    {favoriteOffers.map((offer) => (
-                      <OfferCard
-                        key={offer.id}
-                        offer={offer}
-                        onBookmarkClick={() => handleBookmarkClick(offer.id)}
-                      />
-                    ))}
+                    <OfferList 
+                      offers={favoriteOffers} 
+                      onBookmarkClick={handleBookmarkClick} 
+                      variant="favorites" 
+                    />
                   </div>
                 </li>
               </ul>
