@@ -8,7 +8,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
   const [rating, setRating] = useState<number | null>(null);
   const [comment, setComment] = useState('');
 
-  const isValid = rating !== null && comment.length >= 50;
+  const isValid = rating !== null && comment.length >= 50 && comment.length <= 300;
 
   const handleRatingChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setRating(Number(evt.target.value));
@@ -22,6 +22,8 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
     evt.preventDefault();
     if (isValid && rating !== null) {
       onSubmit(rating, comment);
+      setRating(null);
+      setComment('');
     }
   };
 
@@ -33,7 +35,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
 
       <div className="reviews__rating-form form__rating">
         {[5, 4, 3, 2, 1].map((star) => (
-          <>
+          <div key={star}>
             <input
               className="form__rating-input visually-hidden"
               name="rating"
@@ -52,7 +54,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
                 <use xlinkHref="#icon-star"></use>
               </svg>
             </label>
-          </>
+          </div>
         ))}
       </div>
 
@@ -63,6 +65,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={comment}
         onChange={handleCommentChange}
+        maxLength={300}
       />
 
       <div className="reviews__button-wrapper">

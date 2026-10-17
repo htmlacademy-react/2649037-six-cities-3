@@ -30,6 +30,7 @@ export type DataState = {
   offers: Offer[];
   isOffersLoading: boolean;
   currentOffer: Offer | null;
+  isOfferLoading: boolean;
   nearbyOffers: Offer[];
   reviews: Review[];
   activeOfferId: string | null;
@@ -41,6 +42,7 @@ const initialState: DataState = {
   offers: [],
   isOffersLoading: false,
   currentOffer: null,
+  isOfferLoading: false,
   nearbyOffers: [],
   reviews: [],
   activeOfferId: null,
@@ -72,8 +74,16 @@ const dataSlice = createSlice({
       .addCase(fetchOffers.rejected, (state) => {
         state.isOffersLoading = false;
       })
+      .addCase(fetchOfferById.pending, (state) => {
+        state.isOfferLoading = true;
+        state.currentOffer = null;
+      })
       .addCase(fetchOfferById.fulfilled, (state, action) => {
         state.currentOffer = action.payload;
+        state.isOfferLoading = false;
+      })
+      .addCase(fetchOfferById.rejected, (state) => {
+        state.isOfferLoading = false;
       })
       .addCase(fetchNearbyOffers.fulfilled, (state, action) => {
         state.nearbyOffers = action.payload;

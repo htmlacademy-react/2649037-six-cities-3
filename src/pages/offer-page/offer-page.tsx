@@ -14,6 +14,7 @@ import {
   selectNearbyOffers,
   selectReviews,
   selectAuthorizationStatus,
+  selectIsOfferLoading,
 } from '../../store/selectors';
 import { AuthorizationStatus } from '../../const';
 
@@ -22,6 +23,7 @@ import ReviewForm from '../../components/review-form/review-form';
 import ReviewsList from '../../components/review/reviews-list';
 import Map from '../../components/map/map';
 import OfferList from '../../components/offer-list/offer-list';
+import { Spinner } from '../../components/spinner/spinner';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -40,6 +42,11 @@ function OfferPage(): JSX.Element {
   const nearPlaces = useAppSelector(selectNearbyOffers);
   const reviews = useAppSelector(selectReviews);
   const authStatus = useAppSelector(selectAuthorizationStatus);
+  const isOfferLoading = useAppSelector(selectIsOfferLoading);
+
+  if (isOfferLoading) {
+    return <Spinner />;
+  }
 
   if (!offer) {
     return <NotFoundPage />;
