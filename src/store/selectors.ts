@@ -56,3 +56,18 @@ export const selectFavorites = (state: RootState): Offer[] =>
 
 export const selectFavoriteCount = (state: RootState): number =>
   selectFavorites(state).length;
+
+export const selectFavoritesByCity = createSelector(
+  [selectFavorites],
+  (favorites): Record<string, Offer[]> =>
+    favorites.reduce<Record<string, Offer[]>>((acc, offer) => {
+      const city = offer.city.name;
+      if (!acc[city]) {
+        acc[city] = [];
+      }
+      acc[city].push(offer);
+      return acc;
+    }, {})
+);
+
+export const selectError = (state: RootState): string | null => state.data.error;

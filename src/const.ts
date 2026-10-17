@@ -14,6 +14,8 @@ export enum AuthorizationStatus {
     Unknown = 'UNKNOWN',
   }
 
+export const TOKEN_KEY = 'six-cities-token';
+
 export const DEFAULT_CITY = 'Paris';
 
 export const DEFAULT_MAP_LOCATION: [number, number] = [52.374, 4.889];

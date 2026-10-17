@@ -6,7 +6,7 @@ import {
   postReview,
   toggleFavorite,
 } from '../../store/api-actions';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
 import {
@@ -43,6 +43,8 @@ function OfferPage(): JSX.Element {
   const reviews = useAppSelector(selectReviews);
   const authStatus = useAppSelector(selectAuthorizationStatus);
   const isOfferLoading = useAppSelector(selectIsOfferLoading);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reviewError, setReviewError] = useState<string | null>(null);
 
   if (isOfferLoading) {
     return <Spinner />;
@@ -66,9 +68,25 @@ function OfferPage(): JSX.Element {
     );
   };
 
-  const handleReviewSubmit = (rating: number, comment: string) => {
-    if (id) {
-      dispatch(postReview({ id, rating, comment }));
+  const handleReviewSubmit = async (
+    rating: number,
+    comment: string,
+  ): Promise<boolean> => {
+    if (!id) {
+      return false;
+    }
+
+    setIsSubmitting(true);
+    setReviewError(null);
+
+    try {
+      await dispatch(postReview({ id, rating, comment })).unwrap();
+      setIsSubmitting(false);
+      return true;
+    } catch {
+      setReviewError('Не удалось отправить отзыв. Попробуйте ещё раз.');
+      setIsSubmitting(false);
+      return false;
     }
   };
 
@@ -90,6 +108,9 @@ function OfferPage(): JSX.Element {
       }),
     );
   };
+
+  const limitedNearPlaces = nearPlaces.slice(0, 3);
+  const mapOffers = [...limitedNearPlaces, offer];
 
   return (
     <div className="page">
@@ -150,10 +171,12 @@ function OfferPage(): JSX.Element {
                   {offer.type}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {offer.bedrooms} Bedrooms
+                  {offer.bedrooms}{' '}
+                  {offer.bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max {offer.maxAdults} adults
+                  Max {offer.maxAdults}{' '}
+                  {offer.maxAdults === 1 ? 'adult' : 'adults'}
                 </li>
               </ul>
 
@@ -211,14 +234,18 @@ function OfferPage(): JSX.Element {
               <section className="offer__reviews reviews">
                 <ReviewsList reviews={reviews} />
                 {authStatus === AuthorizationStatus.Auth && (
-                  <ReviewForm onSubmit={handleReviewSubmit} />
+                  <ReviewForm
+                    onSubmit={handleReviewSubmit}
+                    isSubmitting={isSubmitting}
+                    error={reviewError}
+                  />
                 )}
               </section>
             </div>
           </div>
 
           <section className="offer__map map">
-            <Map offers={nearPlaces} />
+            <Map offers={mapOffers} currentOfferId={offer.id} />
           </section>
         </section>
 
@@ -230,7 +257,7 @@ function OfferPage(): JSX.Element {
 
             <div className="near-places__list places__list">
               <OfferList
-                offers={nearPlaces}
+                offers={limitedNearPlaces}
                 onBookmarkClick={handleNearbyBookmarkClick}
               />
             </div>

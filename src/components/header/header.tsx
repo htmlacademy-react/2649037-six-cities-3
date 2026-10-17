@@ -6,7 +6,7 @@ import {
   selectUser,
   selectFavoriteCount,
 } from '../../store/selectors';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus, TOKEN_KEY } from '../../const';
 import { logout } from '../../store/slices/userSlice';
 
 function Header(): JSX.Element {
@@ -20,7 +20,7 @@ function Header(): JSX.Element {
 
   const handleLogout = (evt: React.MouseEvent) => {
     evt.preventDefault();
-    localStorage.removeItem('token');
+    localStorage.removeItem(TOKEN_KEY);
     dispatch(logout());
   };
 

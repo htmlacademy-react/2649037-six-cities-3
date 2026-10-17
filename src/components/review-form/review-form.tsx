@@ -1,7 +1,9 @@
 import { Fragment, useState, ChangeEvent, FormEvent } from 'react';
 
 type ReviewFormProps = {
-  onSubmit: (rating: number, comment: string) => void;
+  onSubmit: (rating: number, comment: string) => Promise<boolean>;
+  isSubmitting: boolean;
+  error: string | null;
 };
 
 const RATING_TITLES: Record<number, string> = {
@@ -12,11 +14,12 @@ const RATING_TITLES: Record<number, string> = {
   1: 'terribly',
 };
 
-function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
+function ReviewForm({ onSubmit, isSubmitting, error }: ReviewFormProps): JSX.Element {
   const [rating, setRating] = useState<number | null>(null);
   const [comment, setComment] = useState('');
 
-  const isValid = rating !== null && comment.length >= 50 && comment.length <= 300;
+  const isValid =
+    rating !== null && comment.length >= 50 && comment.length <= 300;
 
   const handleRatingChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setRating(Number(evt.target.value));
@@ -26,17 +29,22 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
     setComment(evt.target.value);
   };
 
-  const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (isValid && rating !== null) {
-      onSubmit(rating, comment);
+    if (!isValid || rating === null || isSubmitting) {
+      return;
+    }
+
+    const success = await onSubmit(rating, comment);
+
+    if (success) {
       setRating(null);
       setComment('');
     }
   };
 
   return (
-    <form className="reviews__form form" onSubmit={handleFormSubmit}>
+    <form className="reviews__form form" onSubmit={(evt) => void handleFormSubmit(evt)}>
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
@@ -55,6 +63,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
                 type="radio"
                 checked={rating === star}
                 onChange={handleRatingChange}
+                disabled={isSubmitting}
               />
               <label
                 htmlFor={inputId}
@@ -78,6 +87,7 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
         value={comment}
         onChange={handleCommentChange}
         maxLength={300}
+        disabled={isSubmitting}
       />
 
       <div className="reviews__button-wrapper">
@@ -87,12 +97,14 @@ function ReviewForm({ onSubmit }: ReviewFormProps): JSX.Element {
           with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
 
+        {error && <p className="reviews__error">{error}</p>}
+
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={!isValid}
+          disabled={!isValid || isSubmitting}
         >
-          Submit
+          {isSubmitting ? 'Sending...' : 'Submit'}
         </button>
       </div>
     </form>

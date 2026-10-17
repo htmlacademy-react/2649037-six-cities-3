@@ -1,0 +1,30 @@
+.server-error {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: #e64545;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+}
+
+.server-error__close {
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 2px 8px;
+  cursor: pointer;
+  border-radius: 2px;
+  font-size: 12px;
+}
+
+.server-error__close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

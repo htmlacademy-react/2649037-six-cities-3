@@ -7,6 +7,7 @@ import {
   fetchOffers,
   fetchNearbyOffers,
   fetchReviews,
+  fetchFavorites,
   postReview,
   toggleFavorite,
 } from '../api-actions';
@@ -35,6 +36,7 @@ export type DataState = {
   nearbyOffers: Offer[];
   reviews: Review[];
   activeOfferId: string | null;
+  error: string | null;
 };
 
 const initialState: DataState = {
@@ -47,6 +49,7 @@ const initialState: DataState = {
   nearbyOffers: [],
   reviews: [],
   activeOfferId: null,
+  error: null,
 };
 
 const dataSlice = createSlice({
@@ -62,6 +65,9 @@ const dataSlice = createSlice({
     setActiveOffer(state, action: PayloadAction<string | null>) {
       state.activeOfferId = action.payload;
     },
+    clearError(state) {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -74,6 +80,7 @@ const dataSlice = createSlice({
       })
       .addCase(fetchOffers.rejected, (state) => {
         state.isOffersLoading = false;
+        state.error = 'Не удалось загрузить данные. Сервер недоступен.';
       })
       .addCase(fetchOfferById.pending, (state) => {
         state.isOfferLoading = true;
@@ -85,12 +92,22 @@ const dataSlice = createSlice({
       })
       .addCase(fetchOfferById.rejected, (state) => {
         state.isOfferLoading = false;
+        state.error = 'Не удалось загрузить данные. Сервер недоступен.';
       })
       .addCase(fetchNearbyOffers.fulfilled, (state, action) => {
         state.nearbyOffers = action.payload;
       })
+      .addCase(fetchNearbyOffers.rejected, (state) => {
+        state.error = 'Не удалось загрузить данные. Сервер недоступен.';
+      })
       .addCase(fetchReviews.fulfilled, (state, action) => {
         state.reviews = action.payload;
+      })
+      .addCase(fetchReviews.rejected, (state) => {
+        state.error = 'Не удалось загрузить данные. Сервер недоступен.';
+      })
+      .addCase(fetchFavorites.rejected, (state) => {
+        state.error = 'Не удалось загрузить данные. Сервер недоступен.';
       })
       .addCase(postReview.fulfilled, (state, action) => {
         state.reviews.push(action.payload);
@@ -112,6 +129,9 @@ const dataSlice = createSlice({
           state.currentOffer.isFavorite = updated.isFavorite;
         }
       })
+      .addCase(toggleFavorite.rejected, (state) => {
+        state.error = 'Не удалось загрузить данные. Сервер недоступен.';
+      })
       .addCase(logout, (state) => {
         state.offers.forEach((offer) => {
           offer.isFavorite = false;
@@ -122,9 +142,24 @@ const dataSlice = createSlice({
         if (state.currentOffer) {
           state.currentOffer.isFavorite = false;
         }
+      })
+      .addCase(fetchFavorites.fulfilled, (state, action) => {
+        const favoriteIds = new Set(action.payload.map((offer) => offer.id));
+        state.offers.forEach((offer) => {
+          offer.isFavorite = favoriteIds.has(offer.id);
+        });
+        state.nearbyOffers.forEach((offer) => {
+          offer.isFavorite = favoriteIds.has(offer.id);
+        });
+        if (state.currentOffer) {
+          state.currentOffer.isFavorite = favoriteIds.has(
+            state.currentOffer.id,
+          );
+        }
       });
   },
 });
 
-export const { changeCity, changeSort, setActiveOffer } = dataSlice.actions;
+export const { changeCity, changeSort, setActiveOffer, clearError } =
+  dataSlice.actions;
 export default dataSlice.reducer;
