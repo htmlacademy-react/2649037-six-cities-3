@@ -3,8 +3,6 @@ export enum AppRoute {
     Login = '/login',
     Favorites = '/favorites',
     Offer = '/offer/:id',
-    DevArtist = '/dev-artist',
-    DevGenre = '/dev-genre',
   }
 
 

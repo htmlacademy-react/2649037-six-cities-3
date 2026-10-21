@@ -21,12 +21,7 @@ export const createAPI = (): AxiosInstance => {
 
   api.interceptors.response.use(
     (response) => response,
-    (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        // оставим на проверку на будущее
-      }
-      return Promise.reject(error);
-    },
+    (error) => Promise.reject(error),
   );
 
   return api;

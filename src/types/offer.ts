@@ -15,7 +15,7 @@ export type Review = {
 };
 
 export type Offer = {
-  id: string; // UUID
+  id: string;
   title: string;
   type: string;
   price: number;

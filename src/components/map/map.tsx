@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { layerGroup, Marker, icon } from 'leaflet';
+import { layerGroup, LayerGroup, Marker, icon } from 'leaflet';
 import { DEFAULT_MAP_LOCATION } from '../../const';
 import useMap from '../../hooks/use-map';
 import { Offer } from '../../types/offer';
@@ -28,6 +28,7 @@ function MapComponent({ offers, currentOfferId }: MapProps): JSX.Element {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const activeOfferId = useAppSelector(selectActiveOfferId);
   const markersRef = useRef<Map<string, Marker>>(new Map());
+  const layerRef = useRef<LayerGroup | null>(null);
 
   const cityLocation = offers[0]?.city.location;
 
@@ -39,7 +40,11 @@ function MapComponent({ offers, currentOfferId }: MapProps): JSX.Element {
   );
 
   useEffect(() => {
-    if (map && cityLocation) {
+    if (!map || !map.getPane('mapPane')) {
+      return;
+    }
+
+    if (cityLocation) {
       map.setView(
         [cityLocation.latitude, cityLocation.longitude],
         cityLocation.zoom
@@ -48,12 +53,13 @@ function MapComponent({ offers, currentOfferId }: MapProps): JSX.Element {
   }, [map, cityLocation]);
 
   useEffect(() => {
-    if (!map) {
+    if (!map || !map.getPane('mapPane')) {
       return;
     }
 
     const markers = markersRef.current;
     const markerLayer = layerGroup().addTo(map);
+    layerRef.current = markerLayer;
 
     offers.forEach((offer) => {
       const isActive =
@@ -71,7 +77,10 @@ function MapComponent({ offers, currentOfferId }: MapProps): JSX.Element {
     });
 
     return () => {
-      map.removeLayer(markerLayer);
+      if (layerRef.current && map.getPane('mapPane')) {
+        map.removeLayer(layerRef.current);
+        layerRef.current = null;
+      }
       markers.clear();
     };
   }, [map, offers, activeOfferId, currentOfferId]);
