@@ -8,16 +8,15 @@ function useMap(
   const [map, setMap] = useState<Map | null>(null);
   const isRenderedRef = useRef(false);
 
+  const [lat, lng] = center;
+
   useEffect(() => {
     if (mapRef.current === null || isRenderedRef.current) {
       return;
     }
 
     const instance = new Map(mapRef.current, {
-      center: {
-        lat: center[0],
-        lng: center[1],
-      },
+      center: { lat, lng },
       zoom: 12,
     });
 
@@ -33,7 +32,7 @@ function useMap(
       setMap(null);
       isRenderedRef.current = false;
     };
-  }, [mapRef, center]);
+  }, [mapRef, lat, lng]);
 
   return map;
 }
