@@ -1,5 +1,5 @@
-import {useEffect, useState, useRef} from 'react';
-import L, {Map} from 'leaflet';
+import { useEffect, useState, useRef } from 'react';
+import L, { Map } from 'leaflet';
 
 function useMap(
   mapRef: React.RefObject<HTMLElement | null>,
@@ -8,24 +8,31 @@ function useMap(
   const [map, setMap] = useState<Map | null>(null);
   const isRenderedRef = useRef(false);
 
+  const [lat, lng] = center;
+
   useEffect(() => {
-    if (mapRef.current !== null && !isRenderedRef.current) {
-      const instance = new Map(mapRef.current, {
-        center: {
-          lat: center[0],
-          lng: center[1]
-        },
-        zoom: 12
-      });
-
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(instance);
-
-      setMap(instance);
-      isRenderedRef.current = true;
+    if (mapRef.current === null || isRenderedRef.current) {
+      return;
     }
-  }, [mapRef, center]);
+
+    const instance = new Map(mapRef.current, {
+      center: { lat, lng },
+      zoom: 12,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(instance);
+
+    setMap(instance);
+    isRenderedRef.current = true;
+
+    return () => {
+      instance.remove();
+      setMap(null);
+      isRenderedRef.current = false;
+    };
+  }, [mapRef, lat, lng]);
 
   return map;
 }
